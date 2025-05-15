@@ -13,7 +13,7 @@ use Symfony\Component\Clock\now;
 use Jump\JumpDataTable\DataTable;
 use Jump\JumpDataTable\DataAction;
 use Jump\JumpDataTable\DataColumn;
-
+use Illuminate\Database\Capsule\Manager as Capsule;
 class OrderController
 {
     use ViewRenderer;
@@ -189,27 +189,41 @@ class OrderController
         ]);
     }
 
-    public function edit($id)
-    {
-        $order = Order::with(['customer', 'materials'])->find($id);
-        $customers = Customer::all();
-        $materials = Material::all();
-
-        if (!$order) {
-            http_response_code(404);
-            echo "Commande non trouvée";
-            return;
+   public function edit($id)
+{
+     if (is_array($id)) {
+            $id = $id['id'] ?? null; // Extract ID from array if accidentally passed
         }
 
-        $this->render('app', 'orders/edit', [
-            'order' => $order,
-            'customers' => $customers,
-            'materials' => $materials,
-            'priorities' => ['low', 'medium', 'high', 'urgent'],
-            'statuses' => ['received', 'in_preparation', 'in_printing', 'in_finishing', 'ready_for_delivery', 'delivered', 'canceled'],
-            'title' => 'Modifier la commande'
-        ]);
-    }
+        if (!$id) {
+            http_response_code(400);
+            echo "ID de séance non fourni";
+            return;
+        }
+        
+    // Récupérer la commande avec le client
+    $order = Order::with('customer')->findOrFail($id);
+    
+    // Récupérer les matériaux associés proprement
+    $materialsList = Capsule::table('materials')
+        ->join('order_materials', 'materials.id', '=', 'order_materials.material_id')
+        ->where('order_materials.order_id', $id)
+        ->select('materials.*', 'order_materials.quantity_used')
+        ->get();
+
+    $customers = Customer::all();
+    $allMaterials = Material::all();
+
+    $this->render('app', 'orders/edit', [
+        'order' => $order, // L'objet Order unique
+        'materialsList' => $materialsList, // Collection des matériaux associés
+        'customers' => $customers,
+        'materials' => $allMaterials,
+        'priorities' => ['low', 'medium', 'high', 'urgent'],
+        'statuses' => ['received', 'in_preparation', 'in_printing', 'in_finishing', 'ready_for_delivery', 'delivered', 'canceled'],
+        'title' => 'Modifier la commande'
+    ]);
+}
 
     public function update($id)
     {

@@ -152,7 +152,17 @@ class MaterialController
 
     public function edit($id)
     {
-        $material = Material::find($id);
+        if (is_array($id)) {
+            $id = $id['id'] ?? null; // Extract ID from array if accidentally passed
+        }
+
+        if (!$id) {
+            http_response_code(400);
+            echo "ID de séance non fourni";
+            return;
+        }
+       $material = Material::findOrFail($id); 
+       
         if (!$material) {
             http_response_code(404);
             echo "Matériau non trouvé";

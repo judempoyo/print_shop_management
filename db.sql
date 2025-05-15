@@ -76,6 +76,8 @@ CREATE TABLE order_materials (
     material_id INT NOT NULL,
     quantity_used DECIMAL(10,2) NOT NULL,
     PRIMARY KEY (order_id, material_id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (material_id) REFERENCES materials(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB;

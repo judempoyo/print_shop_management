@@ -37,6 +37,7 @@ class Order extends Model
     {
         return $this->belongsToMany(Material::class, 'order_materials')
                     ->withPivot('quantity_used')
-                    ->withTimestamps();
+                    ->withTimestamps(false);
+                    
     }
 }
