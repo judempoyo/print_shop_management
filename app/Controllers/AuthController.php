@@ -19,7 +19,7 @@ class AuthController
     {
         $this->session = new SessionManager();
         $this->session->start();
-        $this->basePath = '/Projets/KongB/public';
+        $this->basePath = '/Projets/autres/hiernostine/public';
     }
 
     // Afficher le formulaire de connexion

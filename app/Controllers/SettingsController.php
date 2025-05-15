@@ -12,7 +12,7 @@ class SettingsController
 
   public function __construct()
   {
-    $this->basePath = '/Projets/KongB/public';
+    $this->basePath = '/Projets/autres/hiernostine/public';
   }
 
   public function index()

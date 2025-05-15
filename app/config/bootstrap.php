@@ -5,7 +5,7 @@ require_once dirname(__DIR__) . '/../vendor/autoload.php';
 // Configuration de base
 define('BASE_PATH', realpath(__DIR__ . '/..'));
 define('PUBLIC_PATH', BASE_PATH . '/public/');
-define('PUBLIC_URL', 'http://jump.localhost/Projets/KongB/public/');
+define('PUBLIC_URL', 'http://jump.localhost/Projets/autres/hiernostine/public/');
 
 use Illuminate\Pagination\Paginator;
 use Illuminate\Database\Capsule\Manager as Capsule;

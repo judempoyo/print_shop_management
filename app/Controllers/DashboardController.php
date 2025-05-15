@@ -22,7 +22,7 @@ class DashboardController
     {
         $this->session = new SessionManager();
         $this->session->start();
-        $this->basePath = '/Projets/KongB/public';
+        $this->basePath = '/Projets/autres/hiernostine/public';
         $this->sessionPrices = SettingsService::get('session_prices', [
            'Portrait' => 150,
         'Mariage' => 2000,

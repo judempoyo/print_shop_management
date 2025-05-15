@@ -17,7 +17,7 @@ class USerController
     {
         $this->session = new SessionManager();
         $this->session->start();
-        $this->basePath = '/Projets/KongB/public';
+        $this->basePath = '/Projets/autres/hiernostine/public';
     }
 
     public function showProfile()

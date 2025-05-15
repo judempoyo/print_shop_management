@@ -8,7 +8,7 @@ use App\Controllers\SettingsController;
 use App\Controllers\DashboardController;
 use App\Controllers\PhotoSessionController;
 
-$basePath = '/Projets/KongB/public';
+$basePath = '/Projets/autres/hiernostine/public';
 
 // Définir les routes publiques
 $publicRoutes = [

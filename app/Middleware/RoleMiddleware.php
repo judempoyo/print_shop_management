@@ -12,7 +12,7 @@ class RoleMiddleware
     public function __construct(SessionManager $session)
     {
         $this->session = $session;
-        $this->basePath = '/Projets/KongB/public';
+        $this->basePath = '/Projets/autres/hiernostine/public';
 
     }
 

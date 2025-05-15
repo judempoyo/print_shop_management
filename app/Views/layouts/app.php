@@ -30,9 +30,9 @@
             $currentRoute = $_SERVER['REQUEST_URI'];
 
             $hideBackButton = in_array($currentRoute, [
-                '/Projets/KongB/public/dashboard',
-                '/Projets/KongB/public/customer',
-                '/Projets/KongB/public/booking',
+                '/Projets/autres/hiernostine/public/dashboard',
+                '/Projets/autres/hiernostine/public/customer',
+                '/Projets/autres/hiernostine/public/booking',
             ]);
 
             if (!$hideBackButton): ?>
