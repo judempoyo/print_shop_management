@@ -11,7 +11,7 @@
         
         <form action="<?= PUBLIC_URL ?>customer/store" method="POST" class="space-y-6">
             <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nom Complet</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nom Complet*</label>
                 <div class="relative">
                     <input type="text" name="name" required
                            class="block w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white transition duration-300"
@@ -25,7 +25,22 @@
             </div>
             
             <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Téléphone</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                <div class="relative">
+                    <input type="email" name="email"
+                           class="block w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white transition duration-300"
+                           placeholder="client@exemple.com">
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Téléphone*</label>
                 <div class="relative">
                     <input type="tel" name="phone" required
                            pattern="^\+?[0-9]{10,15}$"
@@ -39,6 +54,29 @@
                     </div>
                 </div>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Format: +1234567890 ou 0123456789 (10-15 chiffres)</p>
+            </div>
+            
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Adresse</label>
+                <textarea name="address" rows="3"
+                          class="block w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white transition duration-300"
+                          placeholder="123 Rue de l'Imprimerie, 75000 Paris"></textarea>
+            </div>
+            
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Préférences</label>
+                <div class="grid grid-cols-2 gap-4">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="preferences[newsletter]" value="1" 
+                               class="rounded border-gray-300 text-teal-500 shadow-sm focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600">
+                        <span class="ml-2 text-gray-700 dark:text-gray-300">Recevoir la newsletter</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="preferences[sms_notifications]" value="1"
+                               class="rounded border-gray-300 text-teal-500 shadow-sm focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600">
+                        <span class="ml-2 text-gray-700 dark:text-gray-300">Notifications SMS</span>
+                    </label>
+                </div>
             </div>
             
             <div class="flex items-center justify-end space-x-4 pt-4">

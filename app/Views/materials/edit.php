@@ -14,19 +14,13 @@
         
         <form action="<?= PUBLIC_URL ?>customer/update/<?= $customer->id ?>" method="POST" class="space-y-6">
             <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nom Complet*</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nom Complet</label>
                 <input type="text" name="name" value="<?= htmlspecialchars($customer->name) ?>" required
                        class="block w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white transition duration-300">
             </div>
             
             <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-                <input type="email" name="email" value="<?= htmlspecialchars($customer->email) ?>"
-                       class="block w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white transition duration-300">
-            </div>
-            
-            <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Téléphone*</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Téléphone</label>
                 <div class="relative">
                     <input type="tel" name="phone" id="phone" value="<?= htmlspecialchars($customer->phone) ?>" 
                            pattern="^\+?[0-9]{10,15}$"
@@ -42,31 +36,6 @@
                     </div>
                 </div>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Format: +1234567890 ou 0123456789 (10-15 chiffres)</p>
-            </div>
-            
-            <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Adresse</label>
-                <textarea name="address" rows="3"
-                          class="block w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white transition duration-300"
-                          ><?= htmlspecialchars($customer->address) ?></textarea>
-            </div>
-            
-            <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Préférences</label>
-                <div class="grid grid-cols-2 gap-4">
-                    <label class="inline-flex items-center">
-                        <input type="checkbox" name="preferences[newsletter]" value="1" 
-                               <?= isset($customer->preferences['newsletter']) && $customer->preferences['newsletter'] ? 'checked' : '' ?>
-                               class="rounded border-gray-300 text-teal-500 shadow-sm focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600">
-                        <span class="ml-2 text-gray-700 dark:text-gray-300">Recevoir la newsletter</span>
-                    </label>
-                    <label class="inline-flex items-center">
-                        <input type="checkbox" name="preferences[sms_notifications]" value="1"
-                               <?= isset($customer->preferences['sms_notifications']) && $customer->preferences['sms_notifications'] ? 'checked' : '' ?>
-                               class="rounded border-gray-300 text-teal-500 shadow-sm focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600">
-                        <span class="ml-2 text-gray-700 dark:text-gray-300">Notifications SMS</span>
-                    </label>
-                </div>
             </div>
             
             <div class="flex items-center justify-end space-x-4 pt-4">
