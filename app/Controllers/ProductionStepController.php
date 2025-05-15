@@ -33,10 +33,12 @@ class ProductionStepController
         $updateData = ['status' => $status];
 
         if ($status === 'in_progress') {
-            $updateData['start_time'] = now();
+            $updateData['start_time'] = date('Y-m-d H:i:s');
+    } elseif ($status === 'completed') {;
             $updateData['assigned_to'] = $_POST['assigned_to'] ?? null;
         } elseif ($status === 'completed') {
-            $updateData['end_time'] = now();
+            $updateData['end_time'] = date('Y-m-d H:i:s');
+    } elseif ($status === 'completed') {;
         }
 
         $step->update($updateData);

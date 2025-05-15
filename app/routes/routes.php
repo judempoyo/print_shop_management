@@ -6,6 +6,7 @@ use App\Controllers\FileController;
 use App\Controllers\UserController;
 use App\Controllers\OrderController;
 use App\Controllers\CustomerController;
+use App\Controllers\MaterialController;
 use App\Controllers\DashboardController;
 use App\Controllers\ProductionStepController;
 
@@ -63,6 +64,14 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($base
   $r->addRoute('GET', $basePath . '/productionstep/edit/{id:\d+}', [ProductionStepController::class, 'edit']);
   $r->addRoute('POST', $basePath . '/productionstep/update/{id:\d+}', [ProductionStepController::class, 'update']);
   $r->addRoute('POST', $basePath . '/productionstep/delete/{id:\d+}', [ProductionStepController::class, 'delete']);
+
+   // Matériaux
+    $r->addRoute('GET', $basePath . '/material', [MaterialController::class, 'index']);
+    $r->addRoute('GET', $basePath . '/material/create', [MaterialController::class, 'create']);
+    $r->addRoute('POST', $basePath . '/material/store', [MaterialController::class, 'store']);
+    $r->addRoute('GET', $basePath . '/material/edit/{id:\d+}', [MaterialController::class, 'edit']);
+    $r->addRoute('POST', $basePath . '/material/update/{id:\d+}', [MaterialController::class, 'update']);
+    $r->addRoute('POST', $basePath . '/material/delete/{id:\d+}', [MaterialController::class, 'delete']);
 
   $r->addRoute('GET', $basePath . '/', [AuthController::class, 'showLoginForm']);
   $r->addRoute('GET', $basePath . '/login', [AuthController::class, 'showLoginForm']);

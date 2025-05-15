@@ -282,9 +282,11 @@ class OrderController
         $updateData = ['status' => $status];
 
         if ($status === 'in_progress') {
-            $updateData['start_time'] = now();
+            $updateData['start_time'] = date('Y-m-d H:i:s');
+    } elseif ($status === 'completed') {;
         } elseif ($status === 'completed') {
-            $updateData['end_time'] = now();
+            $updateData['end_time'] = date('Y-m-d H:i:s');
+    } elseif ($status === 'completed') {;
         }
 
         $step->update($updateData);
