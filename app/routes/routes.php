@@ -56,14 +56,21 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($base
   $r->addRoute('POST', $basePath . '/file/update/{id:\d+}', [FileController::class, 'update']);
   $r->addRoute('POST', $basePath . '/file/delete/{id:\d+}', [FileController::class, 'delete']);
 
-   $r->addRoute('GET', $basePath . '/productionstep', [ProductionStepController::class, 'index']);
-  $r->addRoute('GET', $basePath . '/productionstep/create', [ProductionStepController::class, 'create']);
-  $r->addRoute('POST', $basePath . '/productionstep/store', [ProductionStepController::class, 'store']);
-  $r->addRoute('POST', $basePath . '/productionstep/addForSession', [ProductionStepController::class, 'addForSession']);
-  $r->addRoute('GET', $basePath . '/productionstep/export', [ProductionStepController::class, 'export']);
-  $r->addRoute('GET', $basePath . '/productionstep/edit/{id:\d+}', [ProductionStepController::class, 'edit']);
-  $r->addRoute('POST', $basePath . '/productionstep/update/{id:\d+}', [ProductionStepController::class, 'update']);
-  $r->addRoute('POST', $basePath . '/productionstep/delete/{id:\d+}', [ProductionStepController::class, 'delete']);
+  /*  $r->addRoute('GET', $basePath . '/production', [ProductionStepController::class, 'index']);
+  $r->addRoute('GET', $basePath . '/production/create', [ProductionStepController::class, 'create']);
+  $r->addRoute('POST', $basePath . '/production/store', [ProductionStepController::class, 'store']);
+  $r->addRoute('POST', $basePath . '/production/addForSession', [ProductionStepController::class, 'addForSession']);
+  $r->addRoute('GET', $basePath . '/production/export', [ProductionStepController::class, 'export']);
+  $r->addRoute('GET', $basePath . '/production/edit/{id:\d+}', [ProductionStepController::class, 'edit']);
+  $r->addRoute('POST', $basePath . '/production/update/{id:\d+}', [ProductionStepController::class, 'update']);
+  $r->addRoute('POST', $basePath . '/production/delete/{id:\d+}', [ProductionStepController::class, 'delete']); */
+
+   // Étapes de production
+    $r->addRoute('GET', $basePath . '/production/create/{order_id:\d+}', [ProductionStepController::class, 'create']);
+    $r->addRoute('POST', $basePath . '/production/store/{order_id:\d+}', [ProductionStepController::class, 'store']);
+    $r->addRoute('GET', $basePath . '/production/edit/{order_id:\d+}/{id:\d+}', [ProductionStepController::class, 'edit']);
+    $r->addRoute('POST', $basePath . '/production/update/{order_id:\d+}/{id:\d+}', [ProductionStepController::class, 'updateStatus']);
+    $r->addRoute('POST', $basePath . '/production/delete/{id:\d+}', [ProductionStepController::class, 'delete']);
 
    // Matériaux
     $r->addRoute('GET', $basePath . '/material', [MaterialController::class, 'index']);
