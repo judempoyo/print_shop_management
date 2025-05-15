@@ -2,11 +2,12 @@
 
 use FastRoute\RouteCollector;
 use App\Controllers\AuthController;
+use App\Controllers\FileController;
 use App\Controllers\UserController;
+use App\Controllers\OrderController;
 use App\Controllers\CustomerController;
-use App\Controllers\SettingsController;
 use App\Controllers\DashboardController;
-use App\Controllers\PhotoSessionController;
+use App\Controllers\ProductionStepController;
 
 $basePath = '/Projets/autres/hiernostine/public';
 
@@ -35,6 +36,34 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($base
   $r->addRoute('POST', $basePath . '/customer/update/{id:\d+}', [CustomerController::class, 'update']);
   $r->addRoute('POST', $basePath . '/customer/delete/{id:\d+}', [CustomerController::class, 'delete']);
 
+   $r->addRoute('GET', $basePath . '/order', [OrderController::class, 'index']);
+  $r->addRoute('GET', $basePath . '/order/create', [OrderController::class, 'create']);
+  $r->addRoute('POST', $basePath . '/order/store', [OrderController::class, 'store']);
+  $r->addRoute('POST', $basePath . '/order/addForSession', [OrderController::class, 'addForSession']);
+  $r->addRoute('GET', $basePath . '/order/export', [OrderController::class, 'export']);
+  $r->addRoute('GET', $basePath . '/order/edit/{id:\d+}', [OrderController::class, 'edit']);
+  $r->addRoute('POST', $basePath . '/order/update/{id:\d+}', [OrderController::class, 'update']);
+  $r->addRoute('POST', $basePath . '/order/delete/{id:\d+}', [OrderController::class, 'delete']);
+
+
+     $r->addRoute('GET', $basePath . '/file', [FileController::class, 'index']);
+  $r->addRoute('GET', $basePath . '/file/create', [FileController::class, 'create']);
+  $r->addRoute('POST', $basePath . '/file/store', [FileController::class, 'store']);
+  $r->addRoute('POST', $basePath . '/file/addForSession', [FileController::class, 'addForSession']);
+  $r->addRoute('GET', $basePath . '/file/export', [FileController::class, 'export']);
+  $r->addRoute('GET', $basePath . '/file/edit/{id:\d+}', [FileController::class, 'edit']);
+  $r->addRoute('POST', $basePath . '/file/update/{id:\d+}', [FileController::class, 'update']);
+  $r->addRoute('POST', $basePath . '/file/delete/{id:\d+}', [FileController::class, 'delete']);
+
+   $r->addRoute('GET', $basePath . '/productionstep', [ProductionStepController::class, 'index']);
+  $r->addRoute('GET', $basePath . '/productionstep/create', [ProductionStepController::class, 'create']);
+  $r->addRoute('POST', $basePath . '/productionstep/store', [ProductionStepController::class, 'store']);
+  $r->addRoute('POST', $basePath . '/productionstep/addForSession', [ProductionStepController::class, 'addForSession']);
+  $r->addRoute('GET', $basePath . '/productionstep/export', [ProductionStepController::class, 'export']);
+  $r->addRoute('GET', $basePath . '/productionstep/edit/{id:\d+}', [ProductionStepController::class, 'edit']);
+  $r->addRoute('POST', $basePath . '/productionstep/update/{id:\d+}', [ProductionStepController::class, 'update']);
+  $r->addRoute('POST', $basePath . '/productionstep/delete/{id:\d+}', [ProductionStepController::class, 'delete']);
+
   $r->addRoute('GET', $basePath . '/', [AuthController::class, 'showLoginForm']);
   $r->addRoute('GET', $basePath . '/login', [AuthController::class, 'showLoginForm']);
   $r->addRoute('POST', $basePath . '/login', [AuthController::class, 'login']);
@@ -52,18 +81,4 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($base
 
   $r->addRoute('GET', $basePath . '/dashboard', [DashboardController::class, 'index']);
   
-  $r->addRoute('GET', $basePath . '/photo-session', [PhotoSessionController::class, 'index']);
-  $r->addRoute('GET', $basePath . '/photo-session/create', [PhotoSessionController::class, 'create']);
-  $r->addRoute('POST', $basePath . '/photo-session/store', [PhotoSessionController::class, 'store']);
-  $r->addRoute('GET', $basePath . '/photo-session/{id:\d+}', [PhotoSessionController::class, 'show']);
-  $r->addRoute('GET', $basePath . '/photo-session/edit/{id:\d+}', [PhotoSessionController::class, 'edit']);
-  $r->addRoute('POST', $basePath . '/photo-session/update/{id:\d+}', [PhotoSessionController::class, 'update']);
-  $r->addRoute('POST', $basePath . '/photo-session/delete/{id:\d+}', [PhotoSessionController::class, 'delete']);
-  $r->addRoute('GET', $basePath . '/photo-session/{id:\d+}/download-links', [PhotoSessionController::class, 'generateDownloadLinks']);
-  $r->addRoute('POST', $basePath . '/photo-session/{id:\d+}/photos', [PhotoSessionController::class, 'storePhotos']);
-  $r->addRoute('POST', $basePath . '/photo-session/{id:\d+}/photos/delete/{photoId:\d+}', [PhotoSessionController::class, 'deletePhoto']);
-  $r->addRoute('POST', $basePath . '/photo-session/{id:\d+}/status', [PhotoSessionController::class, 'updateStatus']);
-
-  $r->addRoute('GET', $basePath . '/settings', [SettingsController::class, 'index']);
-  $r->addRoute('POST', $basePath . '/settings', [SettingsController::class, 'update']);
 });
