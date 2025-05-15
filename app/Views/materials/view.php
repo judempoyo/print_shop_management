@@ -1,3 +1,4 @@
+
 <div class="max-w-2xl mx-auto mt-8">
     <div class="p-6 bg-white rounded-xl shadow-lg dark:bg-gray-800 transition-all duration-300 hover:shadow-xl">
         <div class="flex items-center justify-between mb-8">
