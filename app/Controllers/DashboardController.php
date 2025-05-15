@@ -7,7 +7,7 @@ use App\Models\PhotoSession;
 use App\Models\Customer;
 use App\Models\Photo;
 use App\Core\ViewRenderer;
-use App\Services\SettingsService;
+
 
 class DashboardController
 {
@@ -23,15 +23,6 @@ class DashboardController
         $this->session = new SessionManager();
         $this->session->start();
         $this->basePath = '/Projets/autres/hiernostine/public';
-        $this->sessionPrices = SettingsService::get('session_prices', [
-           'Portrait' => 150,
-        'Mariage' => 2000,
-        'Famille' => 300,
-        'Grossesse' => 250,
-        'Bébé' => 200,
-        'Produit' => 180,
-        'Autre' => 100
-    ]);
     }
 
     public function index()
@@ -52,31 +43,31 @@ class DashboardController
         $data = [
             'user' => $user,
             'totalCustomers' => Customer::count(),
-            'totalSessions' => PhotoSession::count(),
-            'todaySessions' => PhotoSession::whereDate('date', $today)->count(),
-            'newCustomers' => Customer::whereBetween('created_at', [$monthStart, $monthEnd])->count(),
-            'photosToProcess' => Photo::whereDoesntHave('session', function($q) {
-                $q->where('status', PhotoSession::STATUS_PROCESSED);
-            })->count(),
-            'upcomingSessions' => PhotoSession::with('customer')
-                ->where('date', '>=', $today)
-                ->orderBy('date', 'asc')
-                ->limit(5)
-                ->get(),
-            'recentPhotos' => Photo::with('session', 'customer')
-                ->orderBy('created_at', 'desc')
-                ->limit(6)
-                ->get(),
-            'monthlyRevenue' => $this->calculateMonthlyRevenue(),
-            'sessionTypes' => $this->getSessionTypeStats(),
-            'statusStats' => $this->getStatusStats(),
-            'sessionPrices' => $this->sessionPrices
+            // 'totalSessions' => PhotoSession::count(),
+            // 'todaySessions' => PhotoSession::whereDate('date', $today)->count(),
+            // 'newCustomers' => Customer::whereBetween('created_at', [$monthStart, $monthEnd])->count(),
+            // 'photosToProcess' => Photo::whereDoesntHave('session', function($q) {
+            //     $q->where('status', PhotoSession::STATUS_PROCESSED);
+            // })->count(),
+            // 'upcomingSessions' => PhotoSession::with('customer')
+            //     ->where('date', '>=', $today)
+            //     ->orderBy('date', 'asc')
+            //     ->limit(5)
+            //     ->get(),
+            // 'recentPhotos' => Photo::with('session', 'customer')
+            //     ->orderBy('created_at', 'desc')
+            //     ->limit(6)
+            //     ->get(),
+            // 'monthlyRevenue' => $this->calculateMonthlyRevenue(),
+            // 'sessionTypes' => $this->getSessionTypeStats(),
+            // 'statusStats' => $this->getStatusStats(),
+            // 'sessionPrices' => $this->sessionPrices
         ];
 
         $this->render('app', 'dashboard', $data);
     }
 
-    protected function calculateMonthlyRevenue()
+   /*  protected function calculateMonthlyRevenue()
     {
         $monthStart = date('Y-m-01');
         $monthEnd = date('Y-m-t');
@@ -110,5 +101,5 @@ class DashboardController
             ->get()
             ->pluck('count', 'status')
             ->toArray();
-    }
+    } */
 }

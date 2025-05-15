@@ -74,6 +74,37 @@ CREATE TABLE order_materials (
     FOREIGN KEY (material_id) REFERENCES materials(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
+
+CREATE TABLE `password_resets` (
+  `id` int NOT NULL  AUTO_INCREMENT PRIMARY KEY,
+  `email` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `users` (
+  `id` int NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(600) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `created_at`, `updated_at`) VALUES
+(1, 'Jude Mpoyo', 'mpoyojude0@gmail.com', '$2y$10$bbTnyUD15WbVhI1Zjf1tWeYyzi80DbN1xQTcs0wIsTx9G4vuFiize', '2025-04-21 08:18:27', '2025-04-21 08:18:27');
+
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+
 -- Create indexes for better performance
 CREATE INDEX idx_orders_status ON orders(status);
 CREATE INDEX idx_orders_priority ON orders(priority);
