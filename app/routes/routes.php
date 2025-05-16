@@ -45,7 +45,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($base
   $r->addRoute('GET', $basePath . '/order/edit/{id:\d+}', [OrderController::class, 'edit']);
   $r->addRoute('POST', $basePath . '/order/update/{id:\d+}', [OrderController::class, 'update']);
   $r->addRoute('POST', $basePath . '/order/delete/{id:\d+}', [OrderController::class, 'delete']);
-
+ $r->addRoute('GET', $basePath . '/order/{id:\d+}/production', [OrderController::class, 'productionTracking']);
+$r->addRoute('GET', $basePath . '/order/show/{id:\d+}', [OrderController::class, 'show']);
 
      $r->addRoute('GET', $basePath . '/file', [FileController::class, 'index']);
   $r->addRoute('GET', $basePath . '/file/create', [FileController::class, 'create']);

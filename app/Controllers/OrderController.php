@@ -172,22 +172,38 @@ class OrderController
         header('Location: ' . $this->basePath . '/order');
     }
 
-    public function show($id)
-    {
-        $order = Order::with(['customer', 'productionSteps', 'materials', 'files'])
-                     ->find($id);
-
-        if (!$order) {
-            http_response_code(404);
-            echo "Commande non trouvée";
-            return;
-        }
-
-        $this->render('app', 'orders/show', [
-            'order' => $order,
-            'title' => 'Détails de la commande'
-        ]);
+   public function show($id)
+{
+    // Gestion des paramètres d'URL
+    if (is_array($id)) {
+        $id = $id['id'] ?? null;
     }
+
+    if (!$id) {
+        http_response_code(400);
+        echo "ID de commande non fourni";
+        return;
+    }
+
+    // Chargement des données avec requête optimisée
+    $order = Order::with([
+        'customer',
+        'files',
+        'productionSteps' => function($query) {
+            $query->orderBy('created_at', 'asc');
+        },
+        'materials' => function($query) {
+            $query->select('materials.*', 'order_materials.quantity_used as pivot_quantity_used');
+        }
+    ])->findOrFail($id);
+
+    $this->render('app', 'orders/show', [
+        'order' => $order,
+        'title' => 'Détails de la commande',
+        'basePath' => $this->basePath
+    ]);
+}
+
 
    public function edit($id)
 {
@@ -361,4 +377,16 @@ class OrderController
             $order->update(['status' => $statusMap[$currentStepIndex]]);
         }
     }
+
+    public function productionTracking($orderId)
+{
+    $order = Order::with(['productionSteps' => function($query) {
+        $query->orderBy('created_at', 'asc');
+    }])->find($orderId);
+
+    $this->render('app', 'orders/production_tracking', [
+        'order' => $order,
+        'title' => 'Suivi de production'
+    ]);
+}
 }
