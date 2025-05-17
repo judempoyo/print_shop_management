@@ -112,6 +112,16 @@ class ProductionStepController
 
     public function create($orderId)
     {
+          if (is_array($orderId)) {
+            $orderId = $orderId['order_id'] ?? null; // Extract ID from array if accidentally passed
+        }
+
+        if (!$orderId) {
+            http_response_code(400);
+            echo "ID de la commande non fourni";
+            return;
+        }
+
         $order = Order::find($orderId);
         if (!$order) {
             http_response_code(404);

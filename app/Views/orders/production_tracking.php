@@ -66,7 +66,7 @@
                         <?php endif; ?>
                         
                         <div class="mt-3 flex space-x-2">
-                            <a href="<?= PUBLIC_URL ?>production-step/edit/<?= $order->id ?>/<?= $step->id ?>"
+                            <a href="<?= PUBLIC_URL ?>production/edit/<?= $order->id ?>/<?= $step->id ?>"
                                class="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded dark:bg-gray-700 dark:hover:bg-gray-600">
                                 Modifier
                             </a>
@@ -82,7 +82,7 @@
                    class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600">
                     Retour à la commande
                 </a>
-                <a href="<?= PUBLIC_URL ?>production-step/create/<?= $order->id ?>"
+                <a href="<?= PUBLIC_URL ?>production/create/<?= $order->id ?>"
                    class="px-4 py-2 text-white bg-teal-500 rounded-lg shadow-sm hover:bg-teal-600 dark:bg-teal-600 dark:hover:bg-teal-700">
                     Ajouter une étape
                 </a>
