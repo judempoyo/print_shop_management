@@ -7,7 +7,7 @@
             <span class="px-3 py-1 text-sm font-medium rounded-full 
                 <?= $order->status === 'delivered' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 
                    ($order->status === 'canceled' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 
-                   'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200') ?>">
+                   'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200') ?>">
                 <?= ucfirst($order->status) ?>
             </span>
         </div>
@@ -23,7 +23,7 @@
                     <!-- Point de timeline -->
                     <div class="absolute left-0 flex items-center justify-center w-8 h-8 rounded-full 
                         <?= $step->status === 'completed' ? 'bg-green-500' : 
-                           ($step->status === 'in_progress' ? 'bg-blue-500' : 
+                           ($step->status === 'in_progress' ? 'bg-teal-500' : 
                            ($step->status === 'failed' ? 'bg-red-500' : 'bg-gray-300 dark:bg-gray-600')) ?>">
                         <span class="text-white font-bold"><?= $index + 1 ?></span>
                     </div>
@@ -31,7 +31,7 @@
                     <!-- Carte d'étape -->
                     <div class="p-4 border rounded-lg shadow-sm 
                         <?= $step->status === 'completed' ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-gray-700' : 
-                           ($step->status === 'in_progress' ? 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-gray-700' : 
+                           ($step->status === 'in_progress' ? 'border-teal-200 bg-teal-50 dark:border-teal-800 dark:bg-gray-700' : 
                            ($step->status === 'failed' ? 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-gray-700' : 'border-gray-200 dark:border-gray-700')) ?>">
                         <div class="flex justify-between items-start">
                             <div>
@@ -83,7 +83,7 @@
                     Retour à la commande
                 </a>
                 <a href="<?= PUBLIC_URL ?>production-step/create/<?= $order->id ?>"
-                   class="px-4 py-2 text-white bg-blue-500 rounded-lg shadow-sm hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">
+                   class="px-4 py-2 text-white bg-teal-500 rounded-lg shadow-sm hover:bg-teal-600 dark:bg-teal-600 dark:hover:bg-teal-700">
                     Ajouter une étape
                 </a>
             </div>

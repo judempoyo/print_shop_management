@@ -378,11 +378,28 @@ class OrderController
         }
     }
 
-    public function productionTracking($orderId)
+public function productionTracking($orderId)
 {
+    // Handle case where $orderId is an array
+    if (is_array($orderId)) {
+        $orderId = $orderId['id'] ?? null;
+    }
+
+    if (!$orderId) {
+        http_response_code(400);
+        echo "ID de commande non fourni";
+        return;
+    }
+
     $order = Order::with(['productionSteps' => function($query) {
         $query->orderBy('created_at', 'asc');
     }])->find($orderId);
+
+    if (!$order) {
+        http_response_code(404);
+        echo "Commande non trouvée";
+        return;
+    }
 
     $this->render('app', 'orders/production_tracking', [
         'order' => $order,
