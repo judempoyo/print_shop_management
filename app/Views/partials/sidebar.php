@@ -82,12 +82,12 @@
 
             <!-- Production -->
             <li>
-                <a href="<?= PUBLIC_URL ?>production"
-                    class="flex items-center p-2 transition-colors duration-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 group <?= (strpos($_SERVER['REQUEST_URI'], 'production') !== false) ? 'bg-teal-50 text-teal-700 dark:bg-gray-700 dark:text-teal-400' : 'text-gray-700 dark:text-gray-300' ?>">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 <?= (strpos($_SERVER['REQUEST_URI'], 'production') !== false) ? 'text-teal-500' : 'text-gray-500 group-hover:text-teal-500 dark:text-gray-400' ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <a href="<?= PUBLIC_URL ?>file"
+                    class="flex items-center p-2 transition-colors duration-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 group <?= (strpos($_SERVER['REQUEST_URI'], 'file') !== false) ? 'bg-teal-50 text-teal-700 dark:bg-gray-700 dark:text-teal-400' : 'text-gray-700 dark:text-gray-300' ?>">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 <?= (strpos($_SERVER['REQUEST_URI'], 'file') !== false) ? 'text-teal-500' : 'text-gray-500 group-hover:text-teal-500 dark:text-gray-400' ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
                     </svg>
-                    <span class="ml-3 sidebar-text">Production</span>
+                    <span class="ml-3 sidebar-text">Fichier</span>
                 </a>
             </li>
 

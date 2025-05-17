@@ -37,7 +37,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($base
   $r->addRoute('POST', $basePath . '/customer/update/{id:\d+}', [CustomerController::class, 'update']);
   $r->addRoute('POST', $basePath . '/customer/delete/{id:\d+}', [CustomerController::class, 'delete']);
 
-   $r->addRoute('GET', $basePath . '/order', [OrderController::class, 'index']);
+  $r->addRoute('GET', $basePath . '/order', [OrderController::class, 'index']);
   $r->addRoute('GET', $basePath . '/order/create', [OrderController::class, 'create']);
   $r->addRoute('POST', $basePath . '/order/store', [OrderController::class, 'store']);
   $r->addRoute('POST', $basePath . '/order/addForSession', [OrderController::class, 'addForSession']);
@@ -45,42 +45,31 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($base
   $r->addRoute('GET', $basePath . '/order/edit/{id:\d+}', [OrderController::class, 'edit']);
   $r->addRoute('POST', $basePath . '/order/update/{id:\d+}', [OrderController::class, 'update']);
   $r->addRoute('POST', $basePath . '/order/delete/{id:\d+}', [OrderController::class, 'delete']);
- $r->addRoute('GET', $basePath . '/order/{id:\d+}/production', [OrderController::class, 'productionTracking']);
-$r->addRoute('GET', $basePath . '/order/show/{id:\d+}', [OrderController::class, 'show']);
+  $r->addRoute('GET', $basePath . '/order/{id:\d+}/production', [OrderController::class, 'productionTracking']);
+  $r->addRoute('GET', $basePath . '/order/show/{id:\d+}', [OrderController::class, 'show']);
 
-     $r->addRoute('GET', $basePath . '/file', [FileController::class, 'index']);
-  $r->addRoute('GET', $basePath . '/file/create', [FileController::class, 'create']);
-  $r->addRoute('POST', $basePath . '/file/store', [FileController::class, 'store']);
-  $r->addRoute('POST', $basePath . '/file/addForSession', [FileController::class, 'addForSession']);
-  $r->addRoute('GET', $basePath . '/file/export', [FileController::class, 'export']);
-  $r->addRoute('GET', $basePath . '/file/edit/{id:\d+}', [FileController::class, 'edit']);
-  $r->addRoute('POST', $basePath . '/file/update/{id:\d+}', [FileController::class, 'update']);
+  // Routes pour les fichiers
+  $r->addRoute('GET', $basePath . '/file/list/{order_id:\d+}', [FileController::class, 'listFiles']);
+  $r->addRoute('GET', $basePath . '/file/upload/{order_id:\d+}', [FileController::class, 'showUploadForm']);
+  $r->addRoute('POST', $basePath . '/file/upload/{order_id:\d+}', [FileController::class, 'upload']);
+  $r->addRoute('GET', $basePath . '/file/download/{id:\d+}', [FileController::class, 'download']);
   $r->addRoute('POST', $basePath . '/file/delete/{id:\d+}', [FileController::class, 'delete']);
 
-  /*  $r->addRoute('GET', $basePath . '/production', [ProductionStepController::class, 'index']);
-  $r->addRoute('GET', $basePath . '/production/create', [ProductionStepController::class, 'create']);
-  $r->addRoute('POST', $basePath . '/production/store', [ProductionStepController::class, 'store']);
-  $r->addRoute('POST', $basePath . '/production/addForSession', [ProductionStepController::class, 'addForSession']);
-  $r->addRoute('GET', $basePath . '/production/export', [ProductionStepController::class, 'export']);
-  $r->addRoute('GET', $basePath . '/production/edit/{id:\d+}', [ProductionStepController::class, 'edit']);
-  $r->addRoute('POST', $basePath . '/production/update/{id:\d+}', [ProductionStepController::class, 'update']);
-  $r->addRoute('POST', $basePath . '/production/delete/{id:\d+}', [ProductionStepController::class, 'delete']); */
+  // Étapes de production
+  $r->addRoute('GET', $basePath . '/production/create/{order_id:\d+}', [ProductionStepController::class, 'create']);
+  $r->addRoute('POST', $basePath . '/production/store/{order_id:\d+}', [ProductionStepController::class, 'store']);
+  $r->addRoute('GET', $basePath . '/production/edit/{order_id:\d+}/{id:\d+}', [ProductionStepController::class, 'edit']);
+  $r->addRoute('POST', $basePath . '/production/update/{order_id:\d+}/{id:\d+}', [ProductionStepController::class, 'updateStatus']);
+  $r->addRoute('POST', $basePath . '/production/delete/{id:\d+}', [ProductionStepController::class, 'delete']);
 
-   // Étapes de production
-    $r->addRoute('GET', $basePath . '/production/create/{order_id:\d+}', [ProductionStepController::class, 'create']);
-    $r->addRoute('POST', $basePath . '/production/store/{order_id:\d+}', [ProductionStepController::class, 'store']);
-    $r->addRoute('GET', $basePath . '/production/edit/{order_id:\d+}/{id:\d+}', [ProductionStepController::class, 'edit']);
-    $r->addRoute('POST', $basePath . '/production/update/{order_id:\d+}/{id:\d+}', [ProductionStepController::class, 'updateStatus']);
-    $r->addRoute('POST', $basePath . '/production/delete/{id:\d+}', [ProductionStepController::class, 'delete']);
 
-    
-   // Matériaux
-    $r->addRoute('GET', $basePath . '/material', [MaterialController::class, 'index']);
-    $r->addRoute('GET', $basePath . '/material/create', [MaterialController::class, 'create']);
-    $r->addRoute('POST', $basePath . '/material/store', [MaterialController::class, 'store']);
-    $r->addRoute('GET', $basePath . '/material/edit/{id:\d+}', [MaterialController::class, 'edit']);
-    $r->addRoute('POST', $basePath . '/material/update/{id:\d+}', [MaterialController::class, 'update']);
-    $r->addRoute('POST', $basePath . '/material/delete/{id:\d+}', [MaterialController::class, 'delete']);
+  // Matériaux
+  $r->addRoute('GET', $basePath . '/material', [MaterialController::class, 'index']);
+  $r->addRoute('GET', $basePath . '/material/create', [MaterialController::class, 'create']);
+  $r->addRoute('POST', $basePath . '/material/store', [MaterialController::class, 'store']);
+  $r->addRoute('GET', $basePath . '/material/edit/{id:\d+}', [MaterialController::class, 'edit']);
+  $r->addRoute('POST', $basePath . '/material/update/{id:\d+}', [MaterialController::class, 'update']);
+  $r->addRoute('POST', $basePath . '/material/delete/{id:\d+}', [MaterialController::class, 'delete']);
 
   $r->addRoute('GET', $basePath . '/', [AuthController::class, 'showLoginForm']);
   $r->addRoute('GET', $basePath . '/login', [AuthController::class, 'showLoginForm']);
@@ -98,5 +87,5 @@ $r->addRoute('GET', $basePath . '/order/show/{id:\d+}', [OrderController::class,
   $r->addRoute('POST', $basePath . '/reset-password', [AuthController::class, 'resetPassword']);
 
   $r->addRoute('GET', $basePath . '/dashboard', [DashboardController::class, 'index']);
-  
+
 });
