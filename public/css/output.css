@@ -18,6 +18,7 @@
     --color-red-900: oklch(0.396 0.141 25.723);
     --color-orange-100: oklch(0.954 0.038 75.164);
     --color-orange-200: oklch(0.901 0.076 70.697);
+    --color-orange-400: oklch(0.75 0.183 55.934);
     --color-orange-500: oklch(0.705 0.213 47.604);
     --color-orange-600: oklch(0.646 0.222 41.116);
     --color-orange-700: oklch(0.553 0.195 38.402);
@@ -59,6 +60,7 @@
     --color-blue-900: oklch(0.379 0.146 265.522);
     --color-purple-100: oklch(0.946 0.033 307.174);
     --color-purple-200: oklch(0.902 0.063 306.703);
+    --color-purple-400: oklch(0.714 0.203 305.504);
     --color-purple-500: oklch(0.627 0.265 303.9);
     --color-purple-600: oklch(0.558 0.288 302.321);
     --color-purple-700: oklch(0.496 0.265 301.924);
@@ -458,6 +460,15 @@
   .table {
     display: table;
   }
+  .h-1 {
+    height: calc(var(--spacing) * 1);
+  }
+  .h-1\.5 {
+    height: calc(var(--spacing) * 1.5);
+  }
+  .h-2 {
+    height: calc(var(--spacing) * 2);
+  }
   .h-3 {
     height: calc(var(--spacing) * 3);
   }
@@ -547,6 +558,12 @@
   }
   .flex-1 {
     flex: 1;
+  }
+  .flex-shrink {
+    flex-shrink: 1;
+  }
+  .flex-shrink-0 {
+    flex-shrink: 0;
   }
   .border-collapse {
     border-collapse: collapse;
@@ -1071,11 +1088,17 @@
   .text-green-500 {
     color: var(--color-green-500);
   }
+  .text-green-600 {
+    color: var(--color-green-600);
+  }
   .text-green-800 {
     color: var(--color-green-800);
   }
   .text-orange-500 {
     color: var(--color-orange-500);
+  }
+  .text-orange-600 {
+    color: var(--color-orange-600);
   }
   .text-orange-800 {
     color: var(--color-orange-800);
@@ -1198,6 +1221,11 @@
   }
   .transition-opacity {
     transition-property: opacity;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
+  .transition-shadow {
+    transition-property: box-shadow;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
@@ -1454,6 +1482,14 @@
       }
     }
   }
+  .hover\:shadow-lg {
+    &:hover {
+      @media (hover: hover) {
+        --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 4px 6px -4px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+        box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+      }
+    }
+  }
   .hover\:shadow-xl {
     &:hover {
       @media (hover: hover) {
@@ -1636,6 +1672,16 @@
       line-height: var(--tw-leading, var(--text-3xl--line-height));
     }
   }
+  .lg\:col-span-2 {
+    @media (width >= 64rem) {
+      grid-column: span 2 / span 2;
+    }
+  }
+  .lg\:grid-cols-3 {
+    @media (width >= 64rem) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
   .lg\:grid-cols-4 {
     @media (width >= 64rem) {
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1778,6 +1824,11 @@
       background-color: var(--color-green-900);
     }
   }
+  .dark\:bg-green-900\/30 {
+    &:where(.dark, .dark *) {
+      background-color: color-mix(in oklab, var(--color-green-900) 30%, transparent);
+    }
+  }
   .dark\:bg-orange-600 {
     &:where(.dark, .dark *) {
       background-color: var(--color-orange-600);
@@ -1788,6 +1839,11 @@
       background-color: var(--color-orange-900);
     }
   }
+  .dark\:bg-orange-900\/30 {
+    &:where(.dark, .dark *) {
+      background-color: color-mix(in oklab, var(--color-orange-900) 30%, transparent);
+    }
+  }
   .dark\:bg-purple-600 {
     &:where(.dark, .dark *) {
       background-color: var(--color-purple-600);
@@ -1796,6 +1852,11 @@
   .dark\:bg-purple-900 {
     &:where(.dark, .dark *) {
       background-color: var(--color-purple-900);
+    }
+  }
+  .dark\:bg-purple-900\/30 {
+    &:where(.dark, .dark *) {
+      background-color: color-mix(in oklab, var(--color-purple-900) 30%, transparent);
     }
   }
   .dark\:bg-red-600 {
@@ -1915,9 +1976,19 @@
       color: var(--color-orange-200);
     }
   }
+  .dark\:text-orange-400 {
+    &:where(.dark, .dark *) {
+      color: var(--color-orange-400);
+    }
+  }
   .dark\:text-purple-200 {
     &:where(.dark, .dark *) {
       color: var(--color-purple-200);
+    }
+  }
+  .dark\:text-purple-400 {
+    &:where(.dark, .dark *) {
+      color: var(--color-purple-400);
     }
   }
   .dark\:text-red-200 {

@@ -1,12 +1,15 @@
 <?php
 namespace App\Controllers;
 
-use App\Services\SessionManager;
 use App\Models\User;
-use App\Models\PhotoSession;
-use App\Models\Customer;
+use App\Models\Order;
 use App\Models\Photo;
+use App\Models\Customer;
+use App\Models\Material;
 use App\Core\ViewRenderer;
+use App\Models\PhotoSession;
+use App\Models\ProductionStep;
+use App\Services\SessionManager;
 
 
 class DashboardController
@@ -25,47 +28,92 @@ class DashboardController
         $this->basePath = '/Projets/autres/hiernostine/public';
     }
 
-    public function index()
-    {
-        if (!$this->session->has('user')) {
-            $this->session->set('error', 'Vous devez être connecté pour accéder au site.');
-            header('Location: ' . $this->basePath . '/login');
-            exit;
-        }
-        
-        $user = User::find($this->session->get('user'));
-        
-        // Statistiques principales
-        $today = date('Y-m-d');
-        $monthStart = date('Y-m-01');
-        $monthEnd = date('Y-m-t');
-        
-        $data = [
-            'user' => $user,
-            'totalCustomers' => Customer::count(),
-            // 'totalSessions' => PhotoSession::count(),
-            // 'todaySessions' => PhotoSession::whereDate('date', $today)->count(),
-            // 'newCustomers' => Customer::whereBetween('created_at', [$monthStart, $monthEnd])->count(),
-            // 'photosToProcess' => Photo::whereDoesntHave('session', function($q) {
-            //     $q->where('status', PhotoSession::STATUS_PROCESSED);
-            // })->count(),
-            // 'upcomingSessions' => PhotoSession::with('customer')
-            //     ->where('date', '>=', $today)
-            //     ->orderBy('date', 'asc')
-            //     ->limit(5)
-            //     ->get(),
-            // 'recentPhotos' => Photo::with('session', 'customer')
-            //     ->orderBy('created_at', 'desc')
-            //     ->limit(6)
-            //     ->get(),
-            // 'monthlyRevenue' => $this->calculateMonthlyRevenue(),
-            // 'sessionTypes' => $this->getSessionTypeStats(),
-            // 'statusStats' => $this->getStatusStats(),
-            // 'sessionPrices' => $this->sessionPrices
-        ];
+    // Dans votre DashboardController
+public function index()
+{
+    // Statistiques de base
+    $stats = [
+        'total_customers' => Customer::count(),
+        'customer_growth' => $this->calculateGrowth(Customer::class),
+        'active_orders' => Order::whereNotIn('status', ['delivered', 'canceled'])->count(),
+        'orders_this_week' => Order::where('created_at', '>=', date('Y-m-d'))->count(),
+        'in_production' => Order::whereIn('status', ['in_printing', 'in_finishing'])->count(),
+        'production_progress' => $this->calculateProductionProgress(),
+        'to_deliver' => Order::where('status', 'ready_for_delivery')->count(),
+        'delivered_today' => Order::where('status', 'delivered')
+                                ->whereDate('updated_at', date('Y-m-d'))
+                                ->count(),
+    ];
 
-        $this->render('app', 'dashboard', $data);
-    }
+    // Commandes récentes
+    $recent_orders = Order::with('customer')
+                        ->orderBy('created_at', 'desc')
+                        ->limit(5)
+                        ->get();
+
+    // Stocks faibles
+    $low_stock_materials = Material::whereColumn('stock_quantity', '<=', 'min_stock_level')
+                                ->orderBy('stock_quantity')
+                                ->limit(5)
+                                ->get();
+
+    // Activité récente (à adapter selon vos besoins)
+    $recent_activity = $this->getRecentActivity();
+
+    $this->render('app', 'dashboard', [
+        'stats' => $stats,
+        'recent_orders' => $recent_orders,
+        'low_stock_materials' => $low_stock_materials,
+        'recent_activity' => $recent_activity,
+        'title' => 'Tableau de bord'
+    ]);
+}
+
+protected function calculateGrowth($model)
+{
+    $currentMonthCount = $model::whereYear('created_at', date('Y'))
+                             ->whereMonth('created_at', date('m'))
+                             ->count();
+    
+    $lastMonthCount = $model::whereYear('created_at', date('Y', strtotime('last month')))
+                          ->whereMonth('created_at', date('m', strtotime('last month')))
+                          ->count();
+    
+    if ($lastMonthCount == 0) return 100;
+    
+    return round(($currentMonthCount - $lastMonthCount) / $lastMonthCount * 100);
+}
+
+protected function calculateProductionProgress()
+{
+    $totalSteps = ProductionStep::count();
+    if ($totalSteps == 0) return 0;
+    
+    $completedSteps = ProductionStep::where('status', 'completed')->count();
+    
+    return round(($completedSteps / $totalSteps) * 100);
+}
+
+protected function getRecentActivity()
+{
+    // Implémentez cette méthode pour récupérer les activités récentes
+    // Exemple basique :
+    return [
+        [
+            'type' => 'order',
+            'title' => 'Nouvelle commande',
+            'description' => 'Commande #ORD-2023-001 créée',
+            'time' => 'Il y a 2 heures'
+        ],
+        [
+            'type' => 'file',
+            'title' => 'Fichier uploadé',
+            'description' => 'Bon de commande.pdf ajouté',
+            'time' => 'Il y a 4 heures'
+        ],
+        // ... autres activités
+    ];
+}
 
    /*  protected function calculateMonthlyRevenue()
     {
