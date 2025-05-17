@@ -36,7 +36,7 @@ public function index()
         'total_customers' => Customer::count(),
         'customer_growth' => $this->calculateGrowth(Customer::class),
         'active_orders' => Order::whereNotIn('status', ['delivered', 'canceled'])->count(),
-        'orders_this_week' => Order::where('created_at', '>=', date('Y-m-d'))->count(),
+        'orders_this_week' => Order::where('created_at', '>=', date('Y-m-d', strtotime('-1 week')))->count(),
         'in_production' => Order::whereIn('status', ['in_printing', 'in_finishing'])->count(),
         'production_progress' => $this->calculateProductionProgress(),
         'to_deliver' => Order::where('status', 'ready_for_delivery')->count(),
