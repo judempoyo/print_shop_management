@@ -66,6 +66,7 @@
                         <?php endif; ?>
                         
                         <div class="mt-3 flex space-x-2">
+
                             <a href="<?= PUBLIC_URL ?>production/edit/<?= $order->id ?>/<?= $step->id ?>"
                                class="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded dark:bg-gray-700 dark:hover:bg-gray-600">
                                 Modifier

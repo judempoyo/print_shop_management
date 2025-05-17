@@ -17,7 +17,7 @@ class ProductionStepController
         $this->basePath = '/Projets/autres/hiernostine/public';
     }
 
-    public function updateStatus($orderId, $stepId)
+    /* public function updateStatus($orderId, $stepId)
     {
         $step = ProductionStep::where('id', $stepId)
                              ->where('order_id', $orderId)
@@ -62,12 +62,12 @@ class ProductionStepController
             'message' => 'Statut de l\'étape mis à jour'
         ];
         header("Location: {$this->basePath}/order/show/{$orderId}");
-    }
+    } */
 
     protected function updateOrderStatus($orderId)
     {
         $order = Order::with('productionSteps')->find($orderId);
-        
+
         if ($order->status === 'canceled') {
             return; // Ne pas modifier si annulée
         }
@@ -96,7 +96,7 @@ class ProductionStepController
                 'printing' => 'in_printing',
                 'finishing' => 'in_finishing'
             ];
-            
+
             $currentStatus = $order->status;
             foreach ($stepStatuses as $step => $status) {
                 $step = $steps->where('step', $step)->first();
@@ -112,7 +112,7 @@ class ProductionStepController
 
     public function create($orderId)
     {
-          if (is_array($orderId)) {
+        if (is_array($orderId)) {
             $orderId = $orderId['order_id'] ?? null; // Extract ID from array if accidentally passed
         }
 
@@ -158,5 +158,218 @@ class ProductionStepController
             'message' => 'Étape ajoutée avec succès'
         ];
         header("Location: {$this->basePath}/order/show/{$orderId}");
+    }
+
+    public function edit(array $params)
+    {
+        // Extraire les IDs du tableau de paramètres
+        $orderId = $params['order_id'] ?? null;
+        $stepId = $params['id'] ?? null;
+
+        if (!$orderId || !$stepId) {
+            http_response_code(400);
+            echo "IDs de commande et étape requis";
+            return;
+        }
+
+        $step = ProductionStep::where('id', $stepId)
+            ->where('order_id', $orderId)
+            ->first();
+
+        if (!$step) {
+            http_response_code(404);
+            echo "Étape de production non trouvée";
+            return;
+        }
+
+        $order = $step->order;
+
+        $this->render('app', 'production_steps/edit', [
+            'order' => $order,
+            'step' => $step,
+            'statusOptions' => [
+                'pending' => 'En attente',
+                'in_progress' => 'En cours',
+                'completed' => 'Terminé',
+                'on_hold' => 'En pause',
+                'failed' => 'Échec'
+            ],
+            'title' => 'Modifier l\'étape de production'
+        ]);
+    }
+    public function updateStatus(array $params)
+    {
+        try {
+            // Validation des paramètres
+            [$orderId, $stepId] = $this->validateIds($params);
+
+            // Récupération et vérification de l'étape
+            $step = $this->getProductionStep($orderId, $stepId);
+
+            // Validation des données du formulaire
+            $validatedData = $this->validateStepData($_POST);
+
+            // Préparation des données de mise à jour
+            $updateData = $this->prepareUpdateData($step, $validatedData);
+
+            // Mise à jour de l'étape
+            $step->update($updateData);
+
+            // Mise à jour du statut global de la commande
+            $this->updateOrderStatus($orderId);
+
+
+            $_SESSION['flash'] = [
+                'type' => 'success',
+                'message' => 'Étape mise à jour avec succès'
+            ];
+
+        } catch (\InvalidArgumentException $e) {
+            http_response_code(400);
+            $_SESSION['flash'] = [
+                'type' => 'error',
+                'message' => $e->getMessage()
+            ];
+        } catch (\Exception $e) {
+            http_response_code(500);
+            $_SESSION['flash'] = [
+                'type' => 'error',
+                'message' => 'Une erreur est survenue lors de la mise à jour'
+            ];
+        }
+
+        header("Location: {$this->basePath}/order/show/{$orderId}");
+        exit;
+    }
+
+    protected function validateIds(array $params): array
+    {
+        $orderId = $params['order_id'] ?? null;
+        $stepId = $params['id'] ?? null;
+
+        if (!$orderId || !$stepId) {
+            throw new \InvalidArgumentException("IDs de commande et étape requis");
+        }
+
+        return [(int) $orderId, (int) $stepId];
+    }
+
+    protected function getProductionStep(int $orderId, int $stepId): ProductionStep
+    {
+        $step = ProductionStep::where('id', $stepId)
+            ->where('order_id', $orderId)
+            ->first();
+
+        if (!$step) {
+            throw new \InvalidArgumentException("Étape de production non trouvée");
+        }
+
+        return $step;
+    }
+
+    protected function validateStepData(array $data): array
+    {
+        $validated = [
+            'status' => $data['status'] ?? null,
+            'assigned_to' => trim($data['assigned_to'] ?? ''),
+            'comments' => trim($data['comments'] ?? ''),
+            'start_time' => $data['start_time'] ?? null,
+            'end_time' => $data['end_time'] ?? null
+        ];
+
+        if (!in_array($validated['status'], ['pending', 'in_progress', 'completed', 'on_hold', 'failed'])) {
+            throw new \InvalidArgumentException("Statut invalide");
+        }
+
+        return $validated;
+    }
+
+    protected function prepareUpdateData(ProductionStep $step, array $validatedData): array
+    {
+        $updateData = [
+            'status' => $validatedData['status'],
+            'assigned_to' => $validatedData['assigned_to'],
+            'comments' => $validatedData['comments']
+        ];
+
+        // Gestion des dates automatiques
+        switch ($validatedData['status']) {
+            case 'in_progress':
+                if (!$step->start_time) {
+                    $updateData['start_time'] = date('Y-m-d H:i:s');
+                }
+                break;
+
+            case 'completed':
+                $updateData['end_time'] = date('Y-m-d H:i:s');
+                break;
+
+            case 'failed':
+                $updateData['comments'] = $validatedData['comments'] ?: 'Échec non spécifié';
+                break;
+        }
+
+        // Gestion des dates manuelles
+        if ($validatedData['start_time']) {
+            $updateData['start_time'] = $validatedData['start_time'];
+        }
+        if ($validatedData['end_time']) {
+            $updateData['end_time'] = $validatedData['end_time'];
+        }
+
+        return $updateData;
+    }
+
+
+    public function delete(array $params)
+    {
+        try {
+            // Validation des paramètres
+            [$orderId, $stepId] = $this->validateIds($params);
+
+            // Récupération et vérification de l'étape
+            $step = $this->getProductionStep($orderId, $stepId);
+
+            // Vérification des préconditions
+            $this->validateDeletionConditions($step);
+
+            // Suppression
+            $step->delete();
+
+            // Mise à jour du statut global
+            $this->updateOrderStatus($orderId);
+
+
+            $_SESSION['flash'] = [
+                'type' => 'success',
+                'message' => 'Étape supprimée avec succès'
+            ];
+
+        } catch (\InvalidArgumentException $e) {
+            http_response_code(400);
+            $_SESSION['flash'] = [
+                'type' => 'error',
+                'message' => $e->getMessage()
+            ];
+        } catch (\Exception $e) {
+            http_response_code(500);
+            $_SESSION['flash'] = [
+                'type' => 'error',
+                'message' => 'Une erreur est survenue lors de la suppression'
+            ];
+        }
+
+        header("Location: {$this->basePath}/order/show/{$orderId}");
+        exit;
+    }
+
+    protected function validateDeletionConditions(ProductionStep $step): void
+    {
+        if ($step->order->status === 'completed') {
+            throw new \InvalidArgumentException(
+                'Impossible de supprimer une étape d\'une commande terminée'
+            );
+        }
+
     }
 }

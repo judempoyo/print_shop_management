@@ -73,6 +73,7 @@ $r->addRoute('GET', $basePath . '/order/show/{id:\d+}', [OrderController::class,
     $r->addRoute('POST', $basePath . '/production/update/{order_id:\d+}/{id:\d+}', [ProductionStepController::class, 'updateStatus']);
     $r->addRoute('POST', $basePath . '/production/delete/{id:\d+}', [ProductionStepController::class, 'delete']);
 
+    
    // Matériaux
     $r->addRoute('GET', $basePath . '/material', [MaterialController::class, 'index']);
     $r->addRoute('GET', $basePath . '/material/create', [MaterialController::class, 'create']);
