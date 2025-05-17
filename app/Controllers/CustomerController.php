@@ -127,7 +127,17 @@ class CustomerController
 
     public function edit($id)
     {
+         if (is_array($id)) {
+            $id = $id['id'] ?? null; // Extract ID from array if accidentally passed
+        }
+
+        if (!$id) {
+            http_response_code(400);
+            echo "ID de séance non fourni";
+            return;
+        }
         $customer = Customer::find($id);
+  
         if (!$customer) {
             http_response_code(404);
             echo "Client non trouvé";
@@ -135,7 +145,7 @@ class CustomerController
         }
 
         // Décoder les préférences si elles existent
-        $customer->preferences = $customer->preferences ? json_decode($customer->preferences, true) : null;
+        //$customer->preferences = $customer->preferences ? json_decode($customer->preferences, true) : null;
 
         $this->render('app', 'customers/edit', [
             'customer' => $customer,
