@@ -283,7 +283,9 @@ public function deleteProfile()
         
         $this->render('app', 'users/create', [
             'title' => 'Créer un utilisateur',
-            'roles' => $this->roleManager->getAllRoles()
+            'roles' => $this->roleManager->getAllRoles(),
+            'sessionManager' => $this->session,
+
         ]);
     }
 
@@ -355,6 +357,7 @@ public function deleteProfile()
             'title' => 'Modifier l\'utilisateur',
             'user' => $user,
             'roles' => $this->roleManager->getAllRoles(),
+            'sessionManager' => $this->session,
             'errors' => $this->session->get('errors'),
             'old' => $this->session->get('old')
         ]);

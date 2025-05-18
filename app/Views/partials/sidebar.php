@@ -88,7 +88,11 @@
                     <span class="ml-3 sidebar-text">Matériaux</span>
                 </a>
             </li>
-            <?php if ($this->session->get('user_role') === 'admin'): ?>
+            <?php 
+            use App\Models\User;
+            $userRole = User::findOrFail($_SESSION['user']);
+            //var_dump($userRole)?>
+            <?php if ($userRole->role === 'admin'): ?>
     <li>
         <a href="<?= PUBLIC_URL ?>user"
             class="flex items-center p-2 transition-colors duration-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 group <?= (strpos($_SERVER['REQUEST_URI'], 'user') !== false) ? 'bg-teal-50 text-teal-700 dark:bg-gray-700 dark:text-teal-400' : 'text-gray-700 dark:text-gray-300' ?>">

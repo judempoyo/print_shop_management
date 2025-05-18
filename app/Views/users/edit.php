@@ -17,8 +17,8 @@
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nom Complet*</label>
                 <input type="text" name="name" value="<?= htmlspecialchars($user->name) ?>" required
                        class="block w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white transition duration-300">
-                <?php if (isset($this->session->get('errors')['name'])): ?>
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?= $this->session->get('errors')['name'] ?></p>
+                <?php if (isset($sessionManager->get('errors')['name'])): ?>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?= $sessionManager->get('errors')['name'] ?></p>
                 <?php endif; ?>
             </div>
             
@@ -26,8 +26,8 @@
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email*</label>
                 <input type="email" name="email" value="<?= htmlspecialchars($user->email) ?>" required
                        class="block w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white transition duration-300">
-                <?php if (isset($this->session->get('errors')['email'])): ?>
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?= $this->session->get('errors')['email'] ?></p>
+                <?php if (isset($sessionManager->get('errors')['email'])): ?>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?= $sessionManager->get('errors')['email'] ?></p>
                 <?php endif; ?>
             </div>
             
@@ -47,8 +47,8 @@
                     </div>
                 </div>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Format: +1234567890 ou 0123456789 (10-15 chiffres)</p>
-                <?php if (isset($this->session->get('errors')['phone'])): ?>
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?= $this->session->get('errors')['phone'] ?></p>
+                <?php if (isset($sessionManager->get('errors')['phone'])): ?>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?= $sessionManager->get('errors')['phone'] ?></p>
                 <?php endif; ?>
             </div>
             
@@ -59,8 +59,8 @@
                     <option value="user" <?= $user->role === 'user' ? 'selected' : '' ?>>Utilisateur standard</option>
                     <option value="admin" <?= $user->role === 'admin' ? 'selected' : '' ?>>Administrateur</option>
                 </select>
-                <?php if (isset($this->session->get('errors')['role'])): ?>
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?= $this->session->get('errors')['role'] ?></p>
+                <?php if (isset($sessionManager->get('errors')['role'])): ?>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?= $sessionManager->get('errors')['role'] ?></p>
                 <?php endif; ?>
             </div>
             
@@ -76,8 +76,8 @@
                         </svg>
                     </div>
                 </div>
-                <?php if (isset($this->session->get('errors')['password'])): ?>
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?= $this->session->get('errors')['password'] ?></p>
+                <?php if (isset($sessionManager->get('errors')['password'])): ?>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?= $sessionManager->get('errors')['password'] ?></p>
                 <?php endif; ?>
             </div>
             
