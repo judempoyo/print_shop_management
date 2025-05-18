@@ -87,7 +87,19 @@
                     </svg>
                     <span class="ml-3 sidebar-text">Matériaux</span>
                 </a>
-            </li>        </ul>
+            </li>
+            <?php if ($this->session->get('user_role') === 'admin'): ?>
+    <li>
+        <a href="<?= PUBLIC_URL ?>user"
+            class="flex items-center p-2 transition-colors duration-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 group <?= (strpos($_SERVER['REQUEST_URI'], 'user') !== false) ? 'bg-teal-50 text-teal-700 dark:bg-gray-700 dark:text-teal-400' : 'text-gray-700 dark:text-gray-300' ?>">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 <?= (strpos($_SERVER['REQUEST_URI'], 'user') !== false) ? 'text-teal-500' : 'text-gray-500 group-hover:text-teal-500 dark:text-gray-400' ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            <span class="ml-3 sidebar-text">Utilisateurs</span>
+        </a>
+    </li>
+<?php endif; ?>
+         </ul>
 
         <!-- Menu utilisateur (bas de sidebar) -->
         <div class="pt-4 mt-auto space-y-2 border-t border-gray-200 dark:border-gray-700 bottom">

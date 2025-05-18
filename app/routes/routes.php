@@ -86,6 +86,14 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($base
   $r->addRoute('GET', $basePath . '/reset-password/{token}', [AuthController::class, 'showResetForm']);
   $r->addRoute('POST', $basePath . '/reset-password', [AuthController::class, 'resetPassword']);
 
+  // Routes pour la gestion des utilisateurs (admin)
+  $r->addRoute('GET', $basePath . '/user', [UserController::class, 'index']);
+  $r->addRoute('GET', $basePath . '/user/create', [UserController::class, 'create']);
+  $r->addRoute('POST', $basePath . '/user/store', [UserController::class, 'store']);
+  $r->addRoute('GET', $basePath . '/user/edit/{id:\d+}', [UserController::class, 'edit']);
+  $r->addRoute('POST', $basePath . '/user/update/{id:\d+}', [UserController::class, 'update']);
+  $r->addRoute('POST', $basePath . '/user/delete/{id:\d+}', [UserController::class, 'delete']);
+
   $r->addRoute('GET', $basePath . '/dashboard', [DashboardController::class, 'index']);
 
 });

@@ -335,7 +335,15 @@ public function deleteProfile()
     public function edit($userId)
     {
         $this->checkAdminAccess();
-        
+         if (is_array($userId)) {
+            $userId = $userId['id'] ?? null; // Extract ID from array if accidentally passed
+        }
+
+        if (!$userId) {
+            http_response_code(400);
+            echo "ID de séance non fourni";
+            return;
+        }
         $user = User::find($userId);
         if (!$user) {
             $this->session->set('error', 'Utilisateur introuvable.');
