@@ -24,7 +24,7 @@
             </a>
             <p class="mt-4 text-gray-500 dark:text-gray-400">
                 Revenez plus tard ou contactez-nous à  
-                <a href="mailto:support@kongb.local" class="text-yellow-500 dark:text-yellow-400 hover:underline">support@kongb.local</a>
+                <a href="mailto:mpoyojude0@gmail.com" class="text-yellow-500 dark:text-yellow-400 hover:underline">support@hiernostine.local</a>
             </p>
         </div>
     </div>

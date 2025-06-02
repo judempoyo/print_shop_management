@@ -23,7 +23,7 @@
                 ← Retour à l'accueil
             </a>
             <p class="mt-4 text-gray-500 dark:text-gray-400">
-                Ou contactez-nous à <a href="mailto:Bojo45@gmail.com" class="text-teal-500 dark:text-teal-400 hover:underline">support@kongb.local</a>
+                Ou contactez-nous à <a href="mailto:mpoyojude0@gmail.com" class="text-teal-500 dark:text-teal-400 hover:underline">support@hiernostine.local</a>
             </p>
         </div>
     </div>
