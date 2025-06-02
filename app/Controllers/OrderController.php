@@ -3,17 +3,20 @@ namespace App\Controllers;
 
 require_once __DIR__ . './../../vendor/autoload.php';
 
-use App\Models\Order;
+use App\Core\ViewRenderer;
 use App\Models\Customer;
 use App\Models\Material;
-use App\Core\ViewRenderer;
+use App\Models\Order;
 use App\Models\ProductionStep;
-use Jump\JumpDataTable\Filter;
-use Symfony\Component\Clock\now;
-use Jump\JumpDataTable\DataTable;
+use Exception;
+
+use Illuminate\Database\Capsule\Manager as DB;
 use Jump\JumpDataTable\DataAction;
 use Jump\JumpDataTable\DataColumn;
-use Illuminate\Database\Capsule\Manager as Capsule;
+use Jump\JumpDataTable\DataTable;
+use Jump\JumpDataTable\Filter;
+use Symfony\Component\Clock\now;
+
 class OrderController
 {
     use ViewRenderer;
@@ -128,25 +131,28 @@ class OrderController
         ]);
     }
 
-    public function store()
-    {
-        $data = [
-            'customer_id' => $_POST['customer_id'],
-            'reference' => 'ORD-' . date('Ymd-His'),
-            'delivery_date' => $_POST['delivery_date'],
-            'priority' => $_POST['priority'],
-            'notes' => $_POST['notes'] ?? null
-        ];
 
-        if (empty($data['customer_id'])) {
-            http_response_code(400);
-            echo "Le client est obligatoire";
-            return;
-        }
+public function store()
+{
+    $data = [
+        'customer_id' => $_POST['customer_id'],
+        'reference' => 'ORD-' . date('Ymd-His'),
+        'delivery_date' => $_POST['delivery_date'],
+        'priority' => $_POST['priority'],
+        'notes' => $_POST['notes'] ?? null
+    ];
 
+    if (empty($data['customer_id'])) {
+        http_response_code(400);
+        echo "Le client est obligatoire";
+        return;
+    }
+
+    DB::beginTransaction();
+
+    try {
         $order = Order::create($data);
 
-        // Create default production steps
         $steps = ['prepress', 'printing', 'finishing', 'quality_check', 'packaging'];
         foreach ($steps as $step) {
             ProductionStep::create([
@@ -156,22 +162,43 @@ class OrderController
             ]);
         }
 
-        // Attach materials if any
         if (!empty($_POST['materials'])) {
             foreach ($_POST['materials'] as $materialId => $quantity) {
                 if ($quantity > 0) {
+                    $material = Material::find($materialId);
+                    
+                    if (!$material) {
+                        throw new \Exception("Matériau non trouvé");
+                    }
+
+                    if ($material->quantity_available < $quantity) {
+                        throw new \Exception("Stock insuffisant pour {$material->name}");
+                    }
+
+                    $material->decrement('quantity_available', $quantity);
                     $order->materials()->attach($materialId, ['quantity_used' => $quantity]);
                 }
             }
         }
 
+        DB::commit();
+
         $_SESSION['flash'] = [
             'type' => 'success',
             'message' => 'Commande créée avec succès'
         ];
-        header('Location: ' . $this->basePath . '/order');
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        $_SESSION['flash'] = [
+            'type' => 'danger',
+            'message' => 'Erreur : ' . $e->getMessage()
+        ];
     }
 
+    header('Location: ' . $this->basePath . '/order');
+    exit;
+}
    public function show($id)
 {
     // Gestion des paramètres d'URL
@@ -221,7 +248,7 @@ class OrderController
     $order = Order::with('customer')->findOrFail($id);
     
     // Récupérer les matériaux associés proprement
-    $materialsList = Capsule::table('materials')
+    $materialsList = DB::table('materials')
         ->join('order_materials', 'materials.id', '=', 'order_materials.material_id')
         ->where('order_materials.order_id', $id)
         ->select('materials.*', 'order_materials.quantity_used')
@@ -241,70 +268,112 @@ class OrderController
     ]);
 }
 
-    public function update($id)
-    {
-        $order = Order::find($id);
+public function update($id)
+{
+    $order = Order::find($id);
 
-        if (!$order) {
-            http_response_code(404);
-            echo "Commande non trouvée";
-            return;
+    if (!$order) {
+        http_response_code(404);
+        echo "Commande non trouvée";
+        return;
+    }
+
+    DB::beginTransaction();
+
+    try {
+        foreach ($order->materials as $material) {
+            $material->increment('quantity_available', $material->pivot->quantity_used);
         }
-
-        $data = [
+        $order->update([
             'customer_id' => $_POST['customer_id'],
             'delivery_date' => $_POST['delivery_date'],
             'priority' => $_POST['priority'],
             'status' => $_POST['status'],
             'notes' => $_POST['notes'] ?? null
-        ];
+        ]);
 
-        $order->update($data);
-
-        // Update materials
         $order->materials()->detach();
         if (!empty($_POST['materials'])) {
             foreach ($_POST['materials'] as $materialId => $quantity) {
                 if ($quantity > 0) {
+                    $material = Material::find($materialId);
+                    
+                    if (!$material) {
+                        throw new \Exception("Matériau non trouvé");
+                    }
+
+                    if ($material->quantity_available < $quantity) {
+                        throw new \Exception("Stock insuffisant pour {$material->name}");
+                    }
+
+                    $material->decrement('quantity_available', $quantity);
                     $order->materials()->attach($materialId, ['quantity_used' => $quantity]);
                 }
             }
         }
 
+        DB::commit();
+
         $_SESSION['flash'] = [
             'type' => 'success',
             'message' => 'Commande mise à jour avec succès'
         ];
-        header('Location: ' . $this->basePath . '/order');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        $_SESSION['flash'] = [
+            'type' => 'danger',
+            'message' => 'Erreur : ' . $e->getMessage()
+        ];
     }
 
-    public function delete($id)
-    {
-          if (is_array($id)) {
-            $id = $id['id'] ?? null; // Extract ID from array if accidentally passed
-        }
+    header('Location: ' . $this->basePath . '/order');
+    exit;
+}
 
-        if (!$id) {
-            http_response_code(400);
-            echo "ID de commande non fourni";
-            return;
-        }
+public function delete($id)
+{
+    if (is_array($id)) {
+        $id = $id['id'] ?? null;
+    }
+
+    if (!$id) {
+        http_response_code(400);
+        echo "ID de commande non fourni";
+        return;
+    }
+
+    DB::beginTransaction();
+
+    try {
         $order = Order::find($id);
 
         if (!$order) {
-            http_response_code(404);
-            echo "Commande non trouvée";
-            return;
+            throw new \Exception("Commande non trouvée");
+        }
+
+        foreach ($order->materials as $material) {
+            $material->increment('quantity_available', $material->pivot->quantity_used);
         }
 
         $order->delete();
+
+        DB::commit();
+
         $_SESSION['flash'] = [
             'type' => 'success',
             'message' => 'Commande supprimée avec succès'
         ];
-        header('Location: ' . $this->basePath . '/order');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        $_SESSION['flash'] = [
+            'type' => 'danger',
+            'message' => 'Erreur : ' . $e->getMessage()
+        ];
     }
 
+    header('Location: ' . $this->basePath . '/order');
+    exit;
+}
     public function updateStepStatus($orderId, $stepId)
     {
         $step = ProductionStep::where('id', $stepId)
