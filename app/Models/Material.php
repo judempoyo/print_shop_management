@@ -16,6 +16,11 @@ class Material extends Model
         'cost_per_unit'
     ];
     
+
+    protected $casts = [
+        'stock_quantity' => 'int',
+
+    ];
     public function orders(): BelongsToMany
     {
         return $this->belongsToMany(Order::class, 'order_materials')
