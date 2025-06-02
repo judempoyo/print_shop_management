@@ -35,7 +35,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($base
   $r->addRoute('GET', $basePath . '/customer/export', [CustomerController::class, 'export']);
   $r->addRoute('GET', $basePath . '/customer/edit/{id:\d+}', [CustomerController::class, 'edit']);
   $r->addRoute('POST', $basePath . '/customer/update/{id:\d+}', [CustomerController::class, 'update']);
-  $r->addRoute('POST', $basePath . '/customer/delete/{id:\d+}', [CustomerController::class, 'delete']);
+  $r->addRoute('GET', $basePath . '/customer/delete/{id:\d+}', [CustomerController::class, 'delete']);
 
   $r->addRoute('GET', $basePath . '/order', [OrderController::class, 'index']);
   $r->addRoute('GET', $basePath . '/order/create', [OrderController::class, 'create']);
@@ -44,7 +44,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($base
   $r->addRoute('GET', $basePath . '/order/export', [OrderController::class, 'export']);
   $r->addRoute('GET', $basePath . '/order/edit/{id:\d+}', [OrderController::class, 'edit']);
   $r->addRoute('POST', $basePath . '/order/update/{id:\d+}', [OrderController::class, 'update']);
-  $r->addRoute('POST', $basePath . '/order/delete/{id:\d+}', [OrderController::class, 'delete']);
+  $r->addRoute('GET', $basePath . '/order/delete/{id:\d+}', [OrderController::class, 'delete']);
   $r->addRoute('GET', $basePath . '/order/{id:\d+}/production', [OrderController::class, 'productionTracking']);
   $r->addRoute('GET', $basePath . '/order/show/{id:\d+}', [OrderController::class, 'show']);
 
@@ -53,7 +53,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($base
   $r->addRoute('GET', $basePath . '/file/upload/{order_id:\d+}', [FileController::class, 'showUploadForm']);
   $r->addRoute('POST', $basePath . '/file/upload/{order_id:\d+}', [FileController::class, 'upload']);
   $r->addRoute('GET', $basePath . '/file/download/{id:\d+}', [FileController::class, 'download']);
-  $r->addRoute('POST', $basePath . '/file/delete/{id:\d+}', [FileController::class, 'delete']);
+  $r->addRoute('GET', $basePath . '/file/delete/{id:\d+}', [FileController::class, 'delete']);
 
   // Étapes de production
   $r->addRoute('GET', $basePath . '/production/create/{order_id:\d+}', [ProductionStepController::class, 'create']);
@@ -69,7 +69,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($base
   $r->addRoute('POST', $basePath . '/material/store', [MaterialController::class, 'store']);
   $r->addRoute('GET', $basePath . '/material/edit/{id:\d+}', [MaterialController::class, 'edit']);
   $r->addRoute('POST', $basePath . '/material/update/{id:\d+}', [MaterialController::class, 'update']);
-  $r->addRoute('POST', $basePath . '/material/delete/{id:\d+}', [MaterialController::class, 'delete']);
+  $r->addRoute('GET', $basePath . '/material/delete/{id:\d+}', [MaterialController::class, 'delete']);
 
   $r->addRoute('GET', $basePath . '/', [AuthController::class, 'showLoginForm']);
   $r->addRoute('GET', $basePath . '/login', [AuthController::class, 'showLoginForm']);

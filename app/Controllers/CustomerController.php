@@ -63,8 +63,7 @@ class CustomerController
             ->addColumn((new DataColumn('phone', 'Téléphone'))->searchable())
             ->addAction(DataAction::edit('Modifier', fn($item) => $this->basePath.'/customer/'.'edit/'.$item['id']))
             ->addAction(DataAction::delete('Supprimer', fn($item) => $this->basePath.'/customer/'.'delete/'.$item['id']))
-            ->addAction(DataAction::view('Commandes', fn($item) => $this->basePath.'/order?customer_id='.$item['id']))
-            ->data($customers)
+                       ->data($customers)
             ->enableRowSelection(true)
             ->setBulkActions([
                 DataAction::delete('Supprimer', fn($item) => "/delete/{$item}"),
@@ -199,6 +198,15 @@ class CustomerController
 
     public function delete($id)
     {
+          if (is_array($id)) {
+            $id = $id['id'] ?? null; // Extract ID from array if accidentally passed
+        }
+
+        if (!$id) {
+            http_response_code(400);
+            echo "ID du client non fourni";
+            return;
+        }
         $customer = Customer::find($id);
         if (!$customer) {
             http_response_code(404);

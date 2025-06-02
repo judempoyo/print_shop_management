@@ -280,6 +280,15 @@ class OrderController
 
     public function delete($id)
     {
+          if (is_array($id)) {
+            $id = $id['id'] ?? null; // Extract ID from array if accidentally passed
+        }
+
+        if (!$id) {
+            http_response_code(400);
+            echo "ID de commande non fourni";
+            return;
+        }
         $order = Order::find($id);
 
         if (!$order) {
