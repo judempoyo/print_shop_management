@@ -116,6 +116,8 @@ class OrderController
             'datatable' => $table->render(),
             'title' => 'Liste des commandes'
         ]);
+
+        $_SESSION['flash']="";
     }
 
     public function create()
@@ -171,11 +173,11 @@ public function store()
                         throw new \Exception("Matériau non trouvé");
                     }
 
-                    if ($material->quantity_available < $quantity) {
+                    if ($material->stock_quantity < $quantity) {
                         throw new \Exception("Stock insuffisant pour {$material->name}");
                     }
 
-                    $material->decrement('quantity_available', $quantity);
+                    $material->decrement('stock_quantity', $quantity);
                     $order->materials()->attach($materialId, ['quantity_used' => $quantity]);
                 }
             }
@@ -282,7 +284,7 @@ public function update($id)
 
     try {
         foreach ($order->materials as $material) {
-            $material->increment('quantity_available', $material->pivot->quantity_used);
+            $material->increment('stock_quantity', $material->pivot->quantity_used);
         }
         $order->update([
             'customer_id' => $_POST['customer_id'],
@@ -302,11 +304,11 @@ public function update($id)
                         throw new \Exception("Matériau non trouvé");
                     }
 
-                    if ($material->quantity_available < $quantity) {
+                    if ($material->stock_quantity < $quantity) {
                         throw new \Exception("Stock insuffisant pour {$material->name}");
                     }
 
-                    $material->decrement('quantity_available', $quantity);
+                    $material->decrement('stock_quantity', $quantity);
                     $order->materials()->attach($materialId, ['quantity_used' => $quantity]);
                 }
             }
@@ -352,7 +354,7 @@ public function delete($id)
         }
 
         foreach ($order->materials as $material) {
-            $material->increment('quantity_available', $material->pivot->quantity_used);
+            $material->increment('stock_quantity', $material->pivot->quantity_used);
         }
 
         $order->delete();
