@@ -6,10 +6,10 @@ if (!isset($_SESSION)) {
 }
 function Flash($name = '', $message = '', $type = 'danger') {
     $styles = [
-        'success' => 'bg-green-100 border border-green-400 text-green-700',
-        'danger' => 'bg-red-100 border border-red-400 text-red-700',
-        'warning' => 'bg-yellow-100 border border-yellow-400 text-yellow-700',
-        'info' => 'bg-blue-100 border border-blue-400 text-blue-700'
+        'success' => 'bg-green-100 rounded-xl shadow-md border-l-4 border-green-400 bg text-green-700',
+        'danger' => 'bg-red-100 roundexlmd shad-mdow border-l-4 border-red-400 bg text-red-700',
+        'warning' => 'bg-yellow-100 rounded-xl shadow-md border-l-4 yellow-green-400 bg text-yellow-700',
+        'info' => 'bg-blue-100 roundedxld shado-mdw border-l-4 border-blue-400 bg text-blue-700'
     ];
     
     $class = $styles[$type] ?? $styles['danger'];

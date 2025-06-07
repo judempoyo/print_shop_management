@@ -22,6 +22,8 @@ class CustomerController
 
     public function index()
     {
+        Flash('message', 'Client créé avec succès', 'warning');
+
         $perPage = 10;
         $currentPage = $_GET['page'] ?? 1;
         $sort = $_GET['sort'] ?? 'id';
@@ -117,10 +119,11 @@ class CustomerController
 
         Customer::create($data);
 
-        $_SESSION['flash'] = [
+        /* $_SESSION['flash'] = [
             'type' => 'success',
             'message' => 'Client créé avec succès'
-        ];
+        ]; */
+        Flash('message', 'Client créé avec succès', 'success');
         header('Location: ' . $this->basePath . '/customer');
     }
 
