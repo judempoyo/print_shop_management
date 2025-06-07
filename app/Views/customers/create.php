@@ -15,7 +15,7 @@
                 <div class="relative">
                     <input type="text" name="name" required
                            class="block w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white transition duration-300"
-                           placeholder="Jean Dupont">
+                           placeholder="hiernostine">
                     <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
@@ -44,40 +44,26 @@
                 <div class="relative">
                     <input type="tel" name="phone" required
                            pattern="^\+?[0-9]{10,15}$"
-                           title="Format: +1234567890 ou 0123456789 (10-15 chiffres)"
+                           title="Format: ++243975889135 ou 0975889135 (10-15 chiffres)"
                            class="block w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white transition duration-300"
-                           placeholder="+1234567890">
+                           placeholder="+243975889135">
                     <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                         </svg>
                     </div>
                 </div>
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Format: +1234567890 ou 0123456789 (10-15 chiffres)</p>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Format: +243975889135 ou 0975889135 (10-15 chiffres)</p>
             </div>
             
             <div class="space-y-2">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Adresse</label>
                 <textarea name="address" rows="3"
                           class="block w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white transition duration-300"
-                          placeholder="123 Rue de l'Imprimerie, 75000 Paris"></textarea>
+                          placeholder="28 Rachidi/ Kasapa / c. annexe"></textarea>
             </div>
             
-            <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Préférences</label>
-                <div class="grid grid-cols-2 gap-4">
-                    <label class="inline-flex items-center">
-                        <input type="checkbox" name="preferences[newsletter]" value="1" 
-                               class="rounded border-gray-300 text-teal-500 shadow-sm focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600">
-                        <span class="ml-2 text-gray-700 dark:text-gray-300">Recevoir la newsletter</span>
-                    </label>
-                    <label class="inline-flex items-center">
-                        <input type="checkbox" name="preferences[sms_notifications]" value="1"
-                               class="rounded border-gray-300 text-teal-500 shadow-sm focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600">
-                        <span class="ml-2 text-gray-700 dark:text-gray-300">Notifications SMS</span>
-                    </label>
-                </div>
-            </div>
+           
             
             <div class="flex items-center justify-end space-x-4 pt-4">
                 <a href="<?= PUBLIC_URL ?>customer" class="px-6 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600 transition duration-300">

@@ -22,8 +22,7 @@ class CustomerController
 
     public function index()
     {
-        Flash('message', 'Client créé avec succès', 'warning');
-
+        
         $perPage = 10;
         $currentPage = $_GET['page'] ?? 1;
         $sort = $_GET['sort'] ?? 'id';
@@ -99,7 +98,7 @@ class CustomerController
             'preferences' => !empty($_POST['preferences']) ? json_encode($_POST['preferences']) : null
         ];
 
-        // Validation
+     
         $errors = [];
         if (empty($data['name'])) {
             $errors[] = "Le nom est obligatoire";
@@ -119,10 +118,6 @@ class CustomerController
 
         Customer::create($data);
 
-        /* $_SESSION['flash'] = [
-            'type' => 'success',
-            'message' => 'Client créé avec succès'
-        ]; */
         Flash('message', 'Client créé avec succès', 'success');
         header('Location: ' . $this->basePath . '/customer');
     }
@@ -130,7 +125,7 @@ class CustomerController
     public function edit($id)
     {
          if (is_array($id)) {
-            $id = $id['id'] ?? null; // Extract ID from array if accidentally passed
+            $id = $id['id'] ?? null;
         }
 
         if (!$id) {
@@ -146,8 +141,6 @@ class CustomerController
             return;
         }
 
-        // Décoder les préférences si elles existent
-        //$customer->preferences = $customer->preferences ? json_decode($customer->preferences, true) : null;
 
         $this->render('app', 'customers/edit', [
             'customer' => $customer,
@@ -169,10 +162,9 @@ class CustomerController
             'email' => trim($_POST['email'] ?? null),
             'phone' => trim($_POST['phone']),
             'address' => trim($_POST['address'] ?? null),
-            'preferences' => !empty($_POST['preferences']) ? json_encode($_POST['preferences']) : null
         ];
 
-        // Validation
+
         $errors = [];
         if (empty($data['name'])) {
             $errors[] = "Le nom est obligatoire";
@@ -192,17 +184,15 @@ class CustomerController
 
         $customer->update($data);
 
-        $_SESSION['flash'] = [
-            'type' => 'success',
-            'message' => 'Client modifié avec succès'
-        ];
+        Flash('message', 'Client modifié avec succès', 'success');
+
         header('Location: ' . $this->basePath . '/customer');
     }
 
     public function delete($id)
     {
           if (is_array($id)) {
-            $id = $id['id'] ?? null; // Extract ID from array if accidentally passed
+            $id = $id['id'] ?? null; 
         }
 
         if (!$id) {
@@ -217,21 +207,19 @@ class CustomerController
             return;
         }
 
-        // Vérifier si le client a des commandes avant de supprimer
+
         if ($customer->orders()->count() > 0) {
-            $_SESSION['flash'] = [
-                'type' => 'error',
-                'message' => 'Impossible de supprimer: ce client a des commandes associées'
-            ];
+       
+        Flash('message', 'Impossible de supprimer: ce client a des commandes associées', 'success');
+
             header('Location: ' . $this->basePath . '/customer');
             return;
         }
 
         $customer->delete();
-        $_SESSION['flash'] = [
-            'type' => 'success',
-            'message' => 'Client supprimé avec succès'
-        ];
+
+        Flash('message', 'Client supprimé avec succès', 'success');
+
         header('Location: ' . $this->basePath . '/customer');
     }
 
@@ -243,8 +231,7 @@ class CustomerController
         header('Content-Disposition: attachment; filename="clients_' . date('Y-m-d') . '.csv"');
 
         $output = fopen('php://output', 'w');
-        
-        // En-têtes CSV
+
         fputcsv($output, [
             'ID', 
             'Nom', 
@@ -254,7 +241,7 @@ class CustomerController
             'Date création'
         ]);
 
-        // Données
+
         foreach ($customers as $customer) {
             fputcsv($output, [
                 $customer->id,
