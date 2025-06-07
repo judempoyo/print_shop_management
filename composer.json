@@ -1,5 +1,6 @@
 {
     "autoload": {
+      "files": ["app/helpers/flash.php"],
     "psr-4": {
       "App\\": "app/"
     }
