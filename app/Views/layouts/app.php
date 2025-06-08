@@ -24,8 +24,6 @@
         <main class="flex-1 p-8 overflow-y-auto">
 
             <?= $content ?>
-
-            <!-- Bouton Retour (conditionnel) -->
             <?php
             $currentRoute = $_SERVER['REQUEST_URI'];
 

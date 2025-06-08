@@ -22,7 +22,7 @@ class CustomerController
 
     public function index()
     {
-        
+
         $perPage = 10;
         $currentPage = $_GET['page'] ?? 1;
         $sort = $_GET['sort'] ?? 'id';
@@ -32,44 +32,46 @@ class CustomerController
         $allowedSorts = ['id', 'name', 'phone', 'email'];
         $allowedDirections = ['asc', 'desc'];
 
-        if (!in_array($sort, $allowedSorts)) $sort = 'id';
-        if (!in_array($direction, $allowedDirections)) $direction = 'asc';
+        if (!in_array($sort, $allowedSorts))
+            $sort = 'id';
+        if (!in_array($direction, $allowedDirections))
+            $direction = 'asc';
 
         $query = Customer::query();
 
         if (!empty($search)) {
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('phone', 'LIKE', "%{$search}%")
-                  ->orWhere('email', 'LIKE', "%{$search}%");
+                    ->orWhere('phone', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%");
             });
         }
 
         $totalItems = $query->count();
         $offset = ($currentPage - 1) * $perPage;
         $customers = $query->orderBy($sort, $direction)
-                          ->offset($offset)
-                          ->limit($perPage)
-                          ->get()
-                          ->toArray();
+            ->offset($offset)
+            ->limit($perPage)
+            ->get()
+            ->toArray();
 
         $table = DataTable::make()
             ->title('Liste des clients')
             ->modelName('customer')
-            ->createUrl($this->basePath.'/customer/create')
+            ->createUrl($this->basePath . '/customer/create')
             ->publicUrl($this->basePath)
             ->addColumn((new DataColumn('id', 'ID'))->sortable())
             ->addColumn((new DataColumn('name', 'Nom'))->searchable())
             ->addColumn((new DataColumn('email', 'Email'))->searchable())
             ->addColumn((new DataColumn('phone', 'Téléphone'))->searchable())
-            ->addAction(DataAction::edit('Modifier', fn($item) => $this->basePath.'/customer/'.'edit/'.$item['id']))
-            ->addAction(DataAction::delete('Supprimer', fn($item) => $this->basePath.'/customer/'.'delete/'.$item['id']))
-                       ->data($customers)
+            ->addAction(DataAction::edit('Modifier', fn($item) => $this->basePath . '/customer/' . 'edit/' . $item['id']))
+            ->addAction(DataAction::delete('Supprimer', fn($item) => $this->basePath . '/customer/' . 'delete/' . $item['id']))
+            ->data($customers)
             ->enableRowSelection(true)
             ->setBulkActions([
                 DataAction::delete('Supprimer', fn($item) => "/delete/{$item}"),
             ])
-            ->paginate($totalItems, $perPage, $currentPage, $this->basePath.'/customer', [
+            ->paginate($totalItems, $perPage, $currentPage, $this->basePath . '/customer', [
                 'sort' => $sort,
                 'direction' => $direction,
                 'search' => $search
@@ -98,7 +100,7 @@ class CustomerController
             'preferences' => !empty($_POST['preferences']) ? json_encode($_POST['preferences']) : null
         ];
 
-     
+
         $errors = [];
         if (empty($data['name'])) {
             $errors[] = "Le nom est obligatoire";
@@ -124,7 +126,7 @@ class CustomerController
 
     public function edit($id)
     {
-         if (is_array($id)) {
+        if (is_array($id)) {
             $id = $id['id'] ?? null;
         }
 
@@ -134,7 +136,7 @@ class CustomerController
             return;
         }
         $customer = Customer::find($id);
-  
+
         if (!$customer) {
             http_response_code(404);
             echo "Client non trouvé";
@@ -191,8 +193,8 @@ class CustomerController
 
     public function delete($id)
     {
-          if (is_array($id)) {
-            $id = $id['id'] ?? null; 
+        if (is_array($id)) {
+            $id = $id['id'] ?? null;
         }
 
         if (!$id) {
@@ -209,8 +211,8 @@ class CustomerController
 
 
         if ($customer->orders()->count() > 0) {
-       
-        Flash('message', 'Impossible de supprimer: ce client a des commandes associées');
+
+            Flash('message', 'Impossible de supprimer: ce client a des commandes associées');
 
             header('Location: ' . $this->basePath . '/customer');
             return;
@@ -233,10 +235,10 @@ class CustomerController
         $output = fopen('php://output', 'w');
 
         fputcsv($output, [
-            'ID', 
-            'Nom', 
-            'Email', 
-            'Téléphone', 
+            'ID',
+            'Nom',
+            'Email',
+            'Téléphone',
             'Adresse',
             'Date création'
         ]);

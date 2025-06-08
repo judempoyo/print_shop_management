@@ -11,7 +11,7 @@ use Exception;
 class AuthController
 {
     use ViewRenderer;
-    
+
     protected $session;
     protected $basePath;
 
@@ -125,7 +125,7 @@ class AuthController
         exit();
     }
 
- 
+
     public function showForgotPasswordForm()
     {
         $this->checkAuthStatus();
@@ -146,14 +146,14 @@ class AuthController
             $user = User::where('email', $email)->first();
 
             if ($user) {
-                $token = bin2hex(random_bytes(32)); 
+                $token = bin2hex(random_bytes(32));
                 PasswordReset::create([
                     'email' => $user->email,
                     'token' => $token,
                     'created_at' => date('Y-m-d H:i:s')
                 ]);
 
-                // Envoyer l'email de réinitialisation
+
                 $resetLink = PUBLIC_URL . "reset-password/$token";
                 $subject = "Réinitialisation de votre mot de passe";
                 $body = "Cliquez sur ce lien pour réinitialiser votre mot de passe : $resetLink";
@@ -235,7 +235,7 @@ class AuthController
 
     private function isTokenExpired($createdAt)
     {
-        $expirationTime = strtotime($createdAt) + 3600; 
+        $expirationTime = strtotime($createdAt) + 3600;
         return time() > $expirationTime;
     }
 

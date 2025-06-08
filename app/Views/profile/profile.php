@@ -1,11 +1,7 @@
 <div class="max-w-2xl mx-auto my-10 bg-white rounded-xl shadow-md overflow-hidden dark:bg-gray-800 dark:shadow-gray-900/50">
-    <!-- En-tête avec photo de profil -->
     <div class="bg-gradient-to-r from-teal-500 to-gray-600 p-6 text-white dark:from-teal-600 dark:to-gray-700">
         <div class="flex items-center space-x-4">
             <div class="relative">
-               <!--  <img class="h-16 w-16 rounded-full border-4 border-white/30 object-cover dark:border-gray-800/30" 
-                     src="https://ui-avatars.com/api/?name=<?= urlencode($user->name) ?>&background=random" 
-                     alt="Photo de profil"> -->
                      <div class="h-16 w-16 rounded-full border-4 border-white/30 bg-gray-50 dark:border-gray-800/30 place-content-center justify-center items-center">
                         <h2 class="text-center text-3xl font-bold text-teal-700 "><?= $user->initials()?></h2>
                      </div>
@@ -17,10 +13,8 @@
             </div>
         </div>
     </div>
-    
-    <!-- Contenu principal -->
+
     <div class="p-6 space-y-6 dark:p-6">
-        <!-- Messages d'erreur/succès -->
         <?php if (!empty($errors)): ?>
             <div class="bg-red-100 border-l-4 border-red-500 p-4 rounded mb-4 dark:bg-red-900/30 dark:border-red-400">
                 <?php foreach ($errors as $error): ?>

@@ -32,15 +32,17 @@ class MaterialController
         $allowedSorts = ['id', 'name', 'type', 'stock_quantity'];
         $allowedDirections = ['asc', 'desc'];
 
-        if (!in_array($sort, $allowedSorts)) $sort = 'id';
-        if (!in_array($direction, $allowedDirections)) $direction = 'desc';
+        if (!in_array($sort, $allowedSorts))
+            $sort = 'id';
+        if (!in_array($direction, $allowedDirections))
+            $direction = 'desc';
 
         $query = Material::query();
 
         if (!empty($search)) {
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('type', 'LIKE', "%{$search}%");
+                    ->orWhere('type', 'LIKE', "%{$search}%");
             });
         }
 
@@ -51,23 +53,23 @@ class MaterialController
         $totalItems = $query->count();
         $offset = ($currentPage - 1) * $perPage;
         $materials = $query->orderBy($sort, $direction)
-                          ->offset($offset)
-                          ->limit($perPage)
-                          ->get()
-                          ->toArray();
+            ->offset($offset)
+            ->limit($perPage)
+            ->get()
+            ->toArray();
 
         $table = DataTable::make()
             ->title('Gestion des matériaux')
             ->modelName('material')
-            ->createUrl($this->basePath.'/material/create')
+            ->createUrl($this->basePath . '/material/create')
             ->publicUrl($this->basePath)
             ->addColumn((new DataColumn('id', 'ID'))->sortable())
             ->addColumn((new DataColumn('name', 'Nom'))->searchable())
             ->addColumn((new DataColumn('type', 'Type'))->sortable())
             ->addColumn((new DataColumn('stock_quantity', 'Stock'))->sortable())
             ->addColumn((new DataColumn('unit', 'Unité')))
-            ->addAction(DataAction::edit('Modifier', fn($item) => $this->basePath.'/material/'.'edit/'.$item['id']))
-            ->addAction(DataAction::delete('Supprimer', fn($item) => $this->basePath.'/material/'.'delete/'.$item['id']))
+            ->addAction(DataAction::edit('Modifier', fn($item) => $this->basePath . '/material/' . 'edit/' . $item['id']))
+            ->addAction(DataAction::delete('Supprimer', fn($item) => $this->basePath . '/material/' . 'delete/' . $item['id']))
             ->data($materials)
             ->addFilter(new Filter('type', 'Type', [
                 'paper' => 'Papier',
@@ -80,7 +82,7 @@ class MaterialController
             ->setBulkActions([
                 DataAction::delete('Supprimer', fn($item) => "/delete/{$item}"),
             ])
-            ->paginate($totalItems, $perPage, $currentPage, $this->basePath.'/material', [
+            ->paginate($totalItems, $perPage, $currentPage, $this->basePath . '/material', [
                 'sort' => $sort,
                 'direction' => $direction,
                 'search' => $search,
@@ -102,7 +104,7 @@ class MaterialController
             'chemical' => 'Chimique',
             'other' => 'Autre'
         ];
-        
+
         $this->render('app', 'materials/create', [
             'title' => 'Ajouter un matériau',
             'types' => $types
@@ -114,13 +116,13 @@ class MaterialController
         $data = [
             'name' => trim($_POST['name']),
             'type' => $_POST['type'],
-            'stock_quantity' => (float)$_POST['stock_quantity'],
+            'stock_quantity' => (float) $_POST['stock_quantity'],
             'unit' => trim($_POST['unit']),
-            'min_stock_level' => !empty($_POST['min_stock_level']) ? (float)$_POST['min_stock_level'] : null,
-            'cost_per_unit' => !empty($_POST['cost_per_unit']) ? (float)$_POST['cost_per_unit'] : null
+            'min_stock_level' => !empty($_POST['min_stock_level']) ? (float) $_POST['min_stock_level'] : null,
+            'cost_per_unit' => !empty($_POST['cost_per_unit']) ? (float) $_POST['cost_per_unit'] : null
         ];
 
-      
+
         $errors = [];
         if (empty($data['name'])) {
             $errors[] = "Le nom est obligatoire";
@@ -152,7 +154,7 @@ class MaterialController
     public function edit($id)
     {
         if (is_array($id)) {
-            $id = $id['id'] ?? null; 
+            $id = $id['id'] ?? null;
         }
 
         if (!$id) {
@@ -160,8 +162,8 @@ class MaterialController
             echo "ID de séance non fourni";
             return;
         }
-       $material = Material::findOrFail($id); 
-       
+        $material = Material::findOrFail($id);
+
         if (!$material) {
             http_response_code(404);
             echo "Matériau non trouvé";
@@ -195,13 +197,13 @@ class MaterialController
         $data = [
             'name' => trim($_POST['name']),
             'type' => $_POST['type'],
-            'stock_quantity' => (float)$_POST['stock_quantity'],
+            'stock_quantity' => (float) $_POST['stock_quantity'],
             'unit' => trim($_POST['unit']),
-            'min_stock_level' => !empty($_POST['min_stock_level']) ? (float)$_POST['min_stock_level'] : null,
-            'cost_per_unit' => !empty($_POST['cost_per_unit']) ? (float)$_POST['cost_per_unit'] : null
+            'min_stock_level' => !empty($_POST['min_stock_level']) ? (float) $_POST['min_stock_level'] : null,
+            'cost_per_unit' => !empty($_POST['cost_per_unit']) ? (float) $_POST['cost_per_unit'] : null
         ];
 
-      
+
         $errors = [];
         if (empty($data['name'])) {
             $errors[] = "Le nom est obligatoire";
@@ -239,7 +241,7 @@ class MaterialController
         }
 
         if ($material->orders()->count() > 0) {
-    
+
             Flash('message', 'Impossible de supprimer: ce matériau est utilisé dans des commandes');
 
             header('Location: ' . $this->basePath . '/material');

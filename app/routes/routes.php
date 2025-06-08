@@ -1,14 +1,16 @@
 <?php
 
-use FastRoute\RouteCollector;
 use App\Controllers\AuthController;
-use App\Controllers\FileController;
-use App\Controllers\UserController;
-use App\Controllers\OrderController;
 use App\Controllers\CustomerController;
-use App\Controllers\MaterialController;
 use App\Controllers\DashboardController;
+use App\Controllers\FileController;
+use App\Controllers\MaterialController;
+use App\Controllers\OrderController;
 use App\Controllers\ProductionStepController;
+use App\Controllers\ProfileController;
+use App\Controllers\UserController;
+use FastRoute\RouteCollector;
+
 
 $basePath = '/Projets/autres/hiernostine/public';
 
@@ -76,15 +78,17 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($base
   $r->addRoute('POST', $basePath . '/login', [AuthController::class, 'login']);
   $r->addRoute('GET', $basePath . '/register', [AuthController::class, 'showRegisterForm']);
   $r->addRoute('POST', $basePath . '/register', [AuthController::class, 'register']);
-  $r->addRoute('GET', $basePath . '/profile', [UserController::class, 'showProfile']);
-  $r->addRoute('POST', $basePath . '/profile/update-info', [UserController::class, 'updateProfileInfo']);
-  $r->addRoute('POST', $basePath . '/profile/update-password', [UserController::class, 'updateProfilePassword']);
-  $r->addRoute('POST', $basePath . '/profile/delete', [UserController::class, 'deleteProfile']);
   $r->addRoute('GET', $basePath . '/logout', [AuthController::class, 'logout']);
   $r->addRoute('GET', $basePath . '/forgot-password', [AuthController::class, 'showForgotPasswordForm']);
   $r->addRoute('POST', $basePath . '/forgot-password', [AuthController::class, 'sendResetLinkEmail']);
   $r->addRoute('GET', $basePath . '/reset-password/{token}', [AuthController::class, 'showResetForm']);
   $r->addRoute('POST', $basePath . '/reset-password', [AuthController::class, 'resetPassword']);
+
+  //profil
+  $r->addRoute('GET', $basePath . '/profile', [ProfileController::class, 'showProfile']);
+  $r->addRoute('POST', $basePath . '/profile/update-info', [ProfileController::class, 'updateProfileInfo']);
+  $r->addRoute('POST', $basePath . '/profile/update-password', [ProfileController::class, 'updateProfilePassword']);
+  $r->addRoute('POST', $basePath . '/profile/delete', [ProfileController::class, 'deleteProfile']);
 
   // Routes pour la gestion des utilisateurs (admin)
   $r->addRoute('GET', $basePath . '/user', [UserController::class, 'index']);
