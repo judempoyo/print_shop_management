@@ -466,7 +466,7 @@ class USerController
     private function checkAdminAccess()
     {
         if (!$this->session->has('user') || !$this->roleManager->isAdmin($this->session->get('user'))) {
-            $this->session->set('error', 'Accès refusé. Droits insuffisants.');
+            $this->session->set('message', 'Accès refusé. Droits insuffisants.');
             header('Location: ' . $this->basePath . '/');
             exit();
         }

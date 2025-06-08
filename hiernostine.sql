@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 02, 2025 at 09:29 AM
+-- Generation Time: Jun 08, 2025 at 02:51 AM
 -- Server version: 8.0.42-0ubuntu0.24.04.1
 -- PHP Version: 8.2.4
 
@@ -40,15 +40,6 @@ CREATE TABLE `customers` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `customers`
---
-
-INSERT INTO `customers` (`id`, `name`, `email`, `phone`, `address`, `preferences`, `created_at`, `updated_at`) VALUES
-(1, 'Jude Mpoyo', 'mpoyojude0@gmail.com', '+243975889135', 'Av rashidi', '\"{\\\"sms_notifications\\\":\\\"1\\\"}\"', '2025-05-15 22:06:51', '2025-05-15 22:06:51'),
-(2, 'Hiernostine', 'hieno@gmqil.com', '0999999999989', '', '\"{\\\"newsletter\\\":\\\"1\\\"}\"', '2025-05-17 18:45:02', '2025-05-17 18:45:02'),
-(3, 'stone', 'stone@gmail.com', '+243975889135', 'Av rashidi', NULL, '2025-05-31 12:46:59', '2025-05-31 12:46:59');
-
 -- --------------------------------------------------------
 
 --
@@ -66,14 +57,6 @@ CREATE TABLE `files` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `files`
---
-
-INSERT INTO `files` (`id`, `order_id`, `file_name`, `file_path`, `file_type`, `file_size`, `upload_time`, `created_at`, `updated_at`) VALUES
-(1, 2, 'code.png', 'uploads/orders/6829004a51d44_code.png', 'image/png', 119945, '2025-05-17 21:31:54', '2025-05-17 21:31:54', '2025-05-17 21:31:54'),
-(2, 4, 'academy_software_foundation.png', 'uploads/orders/683afa5b4bacf_academy_software_foundation.png', 'image/png', 15636, '2025-05-31 12:47:23', '2025-05-31 12:47:23', '2025-05-31 12:47:23');
 
 -- --------------------------------------------------------
 
@@ -93,13 +76,6 @@ CREATE TABLE `materials` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `materials`
---
-
-INSERT INTO `materials` (`id`, `name`, `type`, `stock_quantity`, `unit`, `min_stock_level`, `cost_per_unit`, `created_at`, `updated_at`) VALUES
-(1, 'A4', 'paper', 1000.00, 'pc', 100.00, 100.00, '2025-05-15 22:08:01', '2025-05-15 22:08:01');
-
 -- --------------------------------------------------------
 
 --
@@ -118,16 +94,6 @@ CREATE TABLE `orders` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`id`, `customer_id`, `reference`, `delivery_date`, `priority`, `status`, `notes`, `created_at`, `updated_at`) VALUES
-(1, 1, 'ORD-20250516-000722', '2025-05-23', 'medium', 'received', 'j', '2025-05-15 22:07:22', '2025-05-15 22:07:22'),
-(2, 1, 'ORD-20250516-000844', '2025-06-04', 'urgent', 'in_finishing', 'mnmnmnmn', '2025-05-15 22:08:44', '2025-05-17 20:47:03'),
-(3, 1, 'ORD-20250516-014451', '2025-06-05', 'medium', 'ready_for_delivery', '', '2025-05-15 23:44:51', '2025-05-17 20:44:05'),
-(4, 2, 'ORD-20250518-102040', '2025-05-19', 'high', 'received', 'lorem', '2025-05-18 08:20:40', '2025-05-18 08:20:40');
-
 -- --------------------------------------------------------
 
 --
@@ -141,13 +107,6 @@ CREATE TABLE `order_materials` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `order_materials`
---
-
-INSERT INTO `order_materials` (`order_id`, `material_id`, `quantity_used`, `created_at`, `updated_at`) VALUES
-(4, 1, 10.00, '2025-05-18 08:20:40', '2025-05-18 08:20:40');
 
 -- --------------------------------------------------------
 
@@ -181,32 +140,6 @@ CREATE TABLE `production_steps` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `production_steps`
---
-
-INSERT INTO `production_steps` (`id`, `order_id`, `step`, `status`, `assigned_to`, `start_time`, `end_time`, `comments`, `created_at`, `updated_at`) VALUES
-(1, 1, 'prepress', 'pending', NULL, NULL, NULL, NULL, '2025-05-15 22:07:22', '2025-05-15 22:07:22'),
-(2, 1, 'printing', 'pending', NULL, NULL, NULL, NULL, '2025-05-15 22:07:22', '2025-05-15 22:07:22'),
-(3, 1, 'finishing', 'pending', NULL, NULL, NULL, NULL, '2025-05-15 22:07:22', '2025-05-15 22:07:22'),
-(4, 1, 'quality_check', 'pending', NULL, NULL, NULL, NULL, '2025-05-15 22:07:22', '2025-05-15 22:07:22'),
-(5, 1, 'packaging', 'pending', NULL, NULL, NULL, NULL, '2025-05-15 22:07:22', '2025-05-15 22:07:22'),
-(6, 2, 'prepress', 'pending', '', NULL, '2025-05-17 22:45:00', '', '2025-05-15 22:08:44', '2025-05-17 20:46:07'),
-(7, 2, 'printing', 'completed', '', NULL, '2025-05-17 22:46:17', '', '2025-05-15 22:08:44', '2025-05-17 20:46:17'),
-(8, 2, 'finishing', 'completed', '', NULL, '2025-05-17 22:45:00', '', '2025-05-15 22:08:44', '2025-05-17 20:47:03'),
-(9, 2, 'quality_check', 'completed', '', '2025-05-17 22:47:00', '2025-05-17 22:45:00', '', '2025-05-15 22:08:44', '2025-05-17 20:47:44'),
-(10, 2, 'packaging', 'completed', '', NULL, '2025-05-17 22:45:00', '', '2025-05-15 22:08:44', '2025-05-17 20:45:00'),
-(11, 3, 'prepress', 'completed', '', NULL, '2025-05-17 22:44:04', '', '2025-05-15 23:44:51', '2025-05-17 20:44:05'),
-(12, 3, 'printing', 'completed', '', '2025-05-17 22:14:00', '2025-05-17 22:20:00', 'dkdkd', '2025-05-15 23:44:51', '2025-05-17 20:15:44'),
-(13, 3, 'finishing', 'completed', '', NULL, '2025-05-17 22:43:09', '', '2025-05-15 23:44:51', '2025-05-17 20:43:10'),
-(14, 3, 'quality_check', 'completed', '', '2025-05-17 22:47:00', '2025-05-17 22:48:00', '', '2025-05-15 23:44:51', '2025-05-17 20:43:32'),
-(15, 3, 'packaging', 'completed', '', '2025-05-17 22:24:00', '2025-05-17 13:25:00', 'jkk', '2025-05-15 23:44:51', '2025-05-17 20:42:56'),
-(16, 4, 'prepress', 'pending', NULL, NULL, NULL, NULL, '2025-05-18 08:20:40', '2025-05-18 08:20:40'),
-(17, 4, 'printing', 'pending', NULL, NULL, NULL, NULL, '2025-05-18 08:20:40', '2025-05-18 08:20:40'),
-(18, 4, 'finishing', 'pending', NULL, NULL, NULL, NULL, '2025-05-18 08:20:40', '2025-05-18 08:20:40'),
-(19, 4, 'quality_check', 'pending', NULL, NULL, NULL, NULL, '2025-05-18 08:20:40', '2025-05-18 08:20:40'),
-(20, 4, 'packaging', 'pending', NULL, NULL, NULL, NULL, '2025-05-18 08:20:40', '2025-05-18 08:20:40');
-
 -- --------------------------------------------------------
 
 --
@@ -218,7 +151,7 @@ CREATE TABLE `users` (
   `name` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `role` varchar(50) NOT NULL,
-  `phone` varchar(25) NOT NULL,
+  `phone` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `password` varchar(600) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -229,7 +162,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `role`, `phone`, `password`, `created_at`, `updated_at`) VALUES
-(1, 'Jude Mpoyo', 'mpoyojude0@gmail.com', 'admin', '', '$2y$10$bbTnyUD15WbVhI1Zjf1tWeYyzi80DbN1xQTcs0wIsTx9G4vuFiize', '2025-04-21 06:18:27', '2025-05-18 09:23:39');
+(1, 'Jude Mpoyo', 'mpoyojude0@gmail.com', 'admin', '', '$2y$10$bbTnyUD15WbVhI1Zjf1tWeYyzi80DbN1xQTcs0wIsTx9G4vuFiize', '2025-04-21 06:18:27', '2025-05-18 09:23:39'),
+(2, 'Jude Mpoyo', 'mpoyojude10@gmail.com', 'user', NULL, '$2y$10$kh0mQ/QaPGCo6NOMDngrx.2UdU/SIw.f3ig4j7QkqsyuHqGaG3sZi', '2025-06-08 00:47:44', '2025-06-08 00:47:44');
 
 --
 -- Indexes for dumped tables
@@ -300,25 +234,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `materials`
 --
 ALTER TABLE `materials`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `password_resets`
@@ -330,7 +264,13 @@ ALTER TABLE `password_resets`
 -- AUTO_INCREMENT for table `production_steps`
 --
 ALTER TABLE `production_steps`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
