@@ -18,7 +18,7 @@ class DashboardController
     protected $session;
     protected $basePath;
 
-    // Prix par type de séance
+  
     protected $sessionPrices = [];
 
     public function __construct()
@@ -28,10 +28,8 @@ class DashboardController
         $this->basePath = '/Projets/autres/hiernostine/public';
     }
 
-    // Dans votre DashboardController
 public function index()
 {
-    // Statistiques de base
     $stats = [
         'total_customers' => Customer::count(),
         'customer_growth' => $this->calculateGrowth(Customer::class),
@@ -45,19 +43,17 @@ public function index()
                                 ->count(),
     ];
 
-    // Commandes récentes
     $recent_orders = Order::with('customer')
                         ->orderBy('created_at', 'desc')
                         ->limit(5)
                         ->get();
 
-    // Stocks faibles
     $low_stock_materials = Material::whereColumn('stock_quantity', '<=', 'min_stock_level')
                                 ->orderBy('stock_quantity')
                                 ->limit(5)
                                 ->get();
 
-    // Activité récente (à adapter selon vos besoins)
+  
     $recent_activity = $this->getRecentActivity();
 
     $this->render('app', 'dashboard', [
@@ -96,8 +92,6 @@ protected function calculateProductionProgress()
 
 protected function getRecentActivity()
 {
-    // Implémentez cette méthode pour récupérer les activités récentes
-    // Exemple basique :
     return [
         [
             'type' => 'order',
@@ -111,43 +105,8 @@ protected function getRecentActivity()
             'description' => 'Bon de commande.pdf ajouté',
             'time' => 'Il y a 4 heures'
         ],
-        // ... autres activités
+       
     ];
 }
 
-   /*  protected function calculateMonthlyRevenue()
-    {
-        $monthStart = date('Y-m-01');
-        $monthEnd = date('Y-m-t');
-        
-        $completedSessions = PhotoSession::where('status', PhotoSession::STATUS_COMPLETED)
-            ->whereBetween('date', [$monthStart, $monthEnd])
-            ->get();
-        
-        $revenue = 0;
-        
-        foreach ($completedSessions as $session) {
-            $revenue += $this->sessionPrices[$session->type] ?? 0;
-        }
-        
-        return $revenue;
-    }
-
-    protected function getSessionTypeStats()
-    {
-        return PhotoSession::selectRaw('type, count(*) as count')
-            ->groupBy('type')
-            ->get()
-            ->pluck('count', 'type')
-            ->toArray();
-    }
-
-    protected function getStatusStats()
-    {
-        return PhotoSession::selectRaw('status, count(*) as count')
-            ->groupBy('status')
-            ->get()
-            ->pluck('count', 'status')
-            ->toArray();
-    } */
 }

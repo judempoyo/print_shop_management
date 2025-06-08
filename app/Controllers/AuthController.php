@@ -22,7 +22,7 @@ class AuthController
         $this->basePath = '/Projets/autres/hiernostine/public';
     }
 
-    // Afficher le formulaire de connexion
+
     public function showLoginForm()
     {
         $this->checkAuthStatus();
@@ -35,8 +35,6 @@ class AuthController
         $this->session->remove('error');
         $this->session->remove('success');
     }
-
-    // Traiter la connexion
     public function login()
     {
         $email = $_POST['email'] ?? '';
@@ -64,7 +62,6 @@ class AuthController
         }
     }
 
-    // Afficher le formulaire d'inscription
     public function showRegisterForm()
     {
         $this->checkAuthStatus();
@@ -76,8 +73,6 @@ class AuthController
         $this->session->remove(['errors', 'old']);
     }
 
-   
-    // Traiter l'inscription
     public function register()
     {
         $data = [
@@ -114,7 +109,6 @@ class AuthController
         }
     }
 
-    // Vérifier l'état de l'authentification
     public function checkAuthStatus()
     {
         if ($this->session->has('user')) {
@@ -123,7 +117,6 @@ class AuthController
         }
     }
 
-    // Déconnexion
     public function logout()
     {
         $this->session->destroy();
@@ -132,18 +125,7 @@ class AuthController
         exit();
     }
 
-    // Tableau de bord
-    /* public function dashboard()
-    {
-        
-        $user = User::find($this->session->get('user'));
-        $this->render('app', 'auth/dashboard', [
-            'title' => 'Tableau de bord',
-            'user' => $user
-        ]);
-    } */
-
-    // Afficher le formulaire de demande de réinitialisation du mot de passe
+ 
     public function showForgotPasswordForm()
     {
         $this->checkAuthStatus();
@@ -156,7 +138,6 @@ class AuthController
         $this->session->remove('success');
     }
 
-    // Traiter la demande de réinitialisation du mot de passe
     public function sendResetLinkEmail()
     {
         $email = $_POST['email'] ?? '';
@@ -165,7 +146,7 @@ class AuthController
             $user = User::where('email', $email)->first();
 
             if ($user) {
-                $token = bin2hex(random_bytes(32)); // Générer un token sécurisé
+                $token = bin2hex(random_bytes(32)); 
                 PasswordReset::create([
                     'email' => $user->email,
                     'token' => $token,
@@ -194,7 +175,7 @@ class AuthController
         }
     }
 
-    // Afficher le formulaire de réinitialisation du mot de passe
+
     public function showResetForm($token)
     {
         $this->checkAuthStatus();
@@ -214,7 +195,7 @@ class AuthController
         $this->session->remove('error');
     }
 
-    // Traiter la réinitialisation du mot de passe
+
     public function resetPassword()
     {
         $token = $_POST['token'] ?? '';
@@ -252,14 +233,13 @@ class AuthController
         }
     }
 
-    // Vérifier si le token a expiré (1 heure de validité)
     private function isTokenExpired($createdAt)
     {
-        $expirationTime = strtotime($createdAt) + 3600; // 1 heure
+        $expirationTime = strtotime($createdAt) + 3600; 
         return time() > $expirationTime;
     }
 
-   de l'inscription
+
     private function validateRegistration($data)
     {
         $errors = [];
