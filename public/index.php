@@ -10,7 +10,7 @@ require_once __DIR__ . '/../app/helpers/flash.php';
 use FastRoute\Dispatcher;
 
 
-// Gestion de la requête
+
 $httpMethod = $_SERVER['REQUEST_METHOD'];
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
