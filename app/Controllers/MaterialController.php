@@ -233,6 +233,15 @@ class MaterialController
 
     public function delete($id)
     {
+         if (is_array($id)) {
+            $id = $id['id'] ?? null;
+        }
+
+        if (!$id) {
+            http_response_code(400);
+            echo "ID de séance non fourni";
+            return;
+        }
         $material = Material::find($id);
         if (!$material) {
             http_response_code(404);

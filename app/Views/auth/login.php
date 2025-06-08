@@ -1,11 +1,12 @@
 <div class="max-w-md mx-auto my-10 bg-white rounded-xl shadow-md overflow-hidden dark:bg-gray-800 dark:shadow-gray-900/50">
-    <!-- En-tête avec dégradé -->
     <div class="bg-gradient-to-r from-teal-500 to-gray-600 p-6 text-white dark:from-teal-600 dark:to-gray-700">
         <h1 class="text-2xl font-bold text-center dark:text-gray-100">Connexion</h1>
     </div>
 
-    <!-- Contenu -->
+
     <div class="p-6">
+       <?php Flash('message')?>
+
         <?php if ($error): ?>
             <div class="bg-red-100 border-l-4 border-red-500 p-4 rounded mb-4 dark:bg-red-900/30 dark:border-red-400">
                 <p class="text-red-700 dark:text-red-200"><?= htmlspecialchars($error) ?></p>

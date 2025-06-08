@@ -15,20 +15,7 @@
     </div>
 
     <div class="p-6 space-y-6 dark:p-6">
-        <?php if (!empty($errors)): ?>
-            <div class="bg-red-100 border-l-4 border-red-500 p-4 rounded mb-4 dark:bg-red-900/30 dark:border-red-400">
-                <?php foreach ($errors as $error): ?>
-                    <p class="text-red-700 dark:text-red-200"><?= htmlspecialchars($error) ?></p>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($this->session->has('success')): ?>
-            <div class="bg-teal-100 border-l-4 border-teal-500 p-4 rounded mb-4 dark:bg-teal-900/30 dark:border-teal-400">
-                <p class="text-teal-700 dark:text-teal-200"><?= htmlspecialchars($this->session->get('success')) ?></p>
-            </div>
-            <?php $this->session->remove('success'); ?>
-        <?php endif; ?>
+       <?php Flash('message')?>
 
         <!-- Section Informations personnelles -->
         <div class="bg-gray-50 dark:bg-gray-700/30 p-5 rounded-lg border border-gray-100 dark:border-gray-600/50">

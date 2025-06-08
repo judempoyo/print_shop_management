@@ -10,9 +10,10 @@ class SessionManager
         }
     }
 
-    public function set($key, $value)
+    public function set($key, $value,$type="danger")
     {
-        $_SESSION[$key] = $value;
+        //$_SESSION[$key] = $value;
+        Flash($key,$value,$type);
     }
 
     public function get($key, $default = null)

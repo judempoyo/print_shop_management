@@ -141,11 +141,11 @@ class USerController
             $user->role = $data['role'];
             $user->save();
 
-            $this->session->set('message', 'Utilisateur créé avec succès.');
+            $this->session->set('message', 'Utilisateur créé avec succès.', 'success');
             header('Location: ' . $this->basePath . '/user');
             exit();
         } catch (Exception $e) {
-            $this->session->set('error', 'Erreur lors de la création de l\'utilisateur: ' . $e->getMessage());
+            $this->session->set('message', 'Erreur lors de la création de l\'utilisateur: ' . $e->getMessage());
             header('Location: ' . $this->basePath . '/user/create');
             exit();
         }
@@ -166,7 +166,7 @@ class USerController
         }
         $user = User::find($userId);
         if (!$user) {
-            $this->session->set('error', 'Utilisateur introuvable.');
+            $this->session->set('message', 'Utilisateur introuvable.');
             header('Location: ' . $this->basePath . '/user');
             exit();
         }
@@ -189,7 +189,7 @@ class USerController
 
         $user = User::find($userId);
         if (!$user) {
-            $this->session->set('error', 'Utilisateur introuvable.');
+            $this->session->set('message', 'Utilisateur introuvable.');
             header('Location: ' . $this->basePath . '/user');
             exit();
         }
@@ -222,11 +222,11 @@ class USerController
 
             $user->save();
 
-            $this->session->set('message', 'Utilisateur mis à jour avec succès.');
+            $this->session->set('message', 'Utilisateur mis à jour avec succès.', 'success');
             header('Location: ' . $this->basePath . '/user');
             exit();
         } catch (Exception $e) {
-            $this->session->set('error', 'Erreur lors de la mise à jour: ' . $e->getMessage());
+            $this->session->set('message', 'Erreur lors de la mise à jour: ' . $e->getMessage());
             header('Location: ' . $this->basePath . '/user/edit/' . $userId);
             exit();
         }
@@ -236,6 +236,15 @@ class USerController
     public function delete($userId)
     {
         $this->checkAdminAccess();
+
+         if (is_array($userId)) {
+            $userId = $userId['id'] ?? null;
+        }
+        if (!$userId) {
+            http_response_code(400);
+            echo "ID de séance non fourni";
+            return;
+        }
 
         try {
             $user = User::find($userId);
@@ -248,9 +257,9 @@ class USerController
             }
 
             $user->delete();
-            $this->session->set('message', 'Utilisateur supprimé avec succès.');
+            $this->session->set('message', 'Utilisateur supprimé avec succès.', 'success');
         } catch (Exception $e) {
-            $this->session->set('error', 'Erreur lors de la suppression: ' . $e->getMessage());
+            $this->session->set('message', 'Erreur lors de la suppression: ' . $e->getMessage());
         }
 
         header('Location: ' . $this->basePath . '/user');
