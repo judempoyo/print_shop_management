@@ -15,7 +15,7 @@
                 <div class="relative">
                     <input type="text" name="name" required
                            class="block w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white transition duration-300"
-                           placeholder="Jean Dupont"
+                           placeholder="Jude"
                            value="<?= htmlspecialchars($sessionManager->get('old')['name'] ?? '') ?>">
                     <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
@@ -52,9 +52,9 @@
                 <div class="relative">
                     <input type="tel" name="phone"
                            pattern="^\+?[0-9]{10,15}$"
-                           title="Format: +1234567890 ou 0123456789 (10-15 chiffres)"
+                           title="Format: + ou 0975889135 (10-15 chiffres)"
                            class="block w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white transition duration-300"
-                           placeholder="+1234567890"
+                           placeholder="+243975889135"
                            value="<?= htmlspecialchars($sessionManager->get('old')['phone'] ?? '') ?>">
                     <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
@@ -62,7 +62,7 @@
                         </svg>
                     </div>
                 </div>
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Format: +1234567890 ou 0123456789 (10-15 chiffres)</p>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">-Format: +243975889135 ou 0975889135 (10-15 chiffres)</p>
                 <?php if (isset($sessionManager->get('errors')['phone'])): ?>
                     <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?= $sessionManager->get('errors')['phone'] ?></p>
                 <?php endif; ?>

@@ -36,7 +36,7 @@
                 <div class="relative">
                     <input type="tel" name="phone" id="phone" value="<?= htmlspecialchars($user->phone) ?>" 
                            pattern="^\+?[0-9]{10,15}$"
-                           title="Format: +1234567890 ou 0123456789 (10-15 chiffres)"
+                           title="Format: +243975889135 ou 0975889135 (10-15 chiffres)"
                            class="block w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white transition duration-300">
                     <div class="absolute inset-y-0 right-0 flex items-center pr-3">
                         <button type="button" onclick="document.getElementById('phone').value=''" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
@@ -46,7 +46,7 @@
                         </button>
                     </div>
                 </div>
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Format: +1234567890 ou 0123456789 (10-15 chiffres)</p>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Format: +243975889135 ou 0975889135 (10-15 chiffres)</p>
                 <?php if (isset($sessionManager->get('errors')['phone'])): ?>
                     <p class="mt-1 text-sm text-red-600 dark:text-red-400"><?= $sessionManager->get('errors')['phone'] ?></p>
                 <?php endif; ?>
