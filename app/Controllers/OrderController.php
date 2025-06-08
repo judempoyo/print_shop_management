@@ -40,17 +40,19 @@ class OrderController
         $allowedSorts = ['id', 'reference', 'delivery_date', 'priority', 'status'];
         $allowedDirections = ['asc', 'desc'];
 
-        if (!in_array($sort, $allowedSorts)) $sort = 'id';
-        if (!in_array($direction, $allowedDirections)) $direction = 'desc';
+        if (!in_array($sort, $allowedSorts))
+            $sort = 'id';
+        if (!in_array($direction, $allowedDirections))
+            $direction = 'desc';
 
         $query = Order::with('customer');
 
         if (!empty($search)) {
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('reference', 'LIKE', "%{$search}%")
-                  ->orWhereHas('customer', function($q) use ($search) {
-                      $q->where('name', 'LIKE', "%{$search}%");
-                  });
+                    ->orWhereHas('customer', function ($q) use ($search) {
+                        $q->where('name', 'LIKE', "%{$search}%");
+                    });
             });
         }
 
@@ -65,15 +67,15 @@ class OrderController
         $totalItems = $query->count();
         $offset = ($currentPage - 1) * $perPage;
         $orders = $query->orderBy($sort, $direction)
-                       ->offset($offset)
-                       ->limit($perPage)
-                       ->get()
-                       ->toArray();
+            ->offset($offset)
+            ->limit($perPage)
+            ->get()
+            ->toArray();
 
         $table = DataTable::make()
             ->title('Liste des commandes')
             ->modelName('order')
-            ->createUrl($this->basePath.'/order/create')
+            ->createUrl($this->basePath . '/order/create')
             ->publicUrl($this->basePath)
             ->addColumn((new DataColumn('id', 'ID'))->sortable())
             ->addColumn((new DataColumn('reference', 'Référence'))->searchable())
@@ -81,9 +83,9 @@ class OrderController
             ->addColumn((new DataColumn('delivery_date', 'Date livraison'))->sortable())
             ->addColumn((new DataColumn('priority', 'Priorité'))->sortable())
             ->addColumn((new DataColumn('status', 'Statut'))->sortable())
-            ->addAction(DataAction::edit('Modifier', fn($item) => $this->basePath.'/order/'.'edit/'.$item['id']))
-            ->addAction(DataAction::delete('Supprimer', fn($item) => $this->basePath.'/order/'.'delete/'.$item['id']))
-            ->addAction(DataAction::view('Détails', fn($item) => $this->basePath.'/order/'.'show/'.$item['id']))
+            ->addAction(DataAction::edit('Modifier', fn($item) => $this->basePath . '/order/' . 'edit/' . $item['id']))
+            ->addAction(DataAction::delete('Supprimer', fn($item) => $this->basePath . '/order/' . 'delete/' . $item['id']))
+            ->addAction(DataAction::view('Détails', fn($item) => $this->basePath . '/order/' . 'show/' . $item['id']))
             ->data($orders)
             ->addFilter(new Filter('status', 'Statut', [
                 'received' => 'Reçue',
@@ -104,7 +106,7 @@ class OrderController
             ->setBulkActions([
                 DataAction::delete('Supprimer', fn($item) => "/delete/{$item}"),
             ])
-            ->paginate($totalItems, $perPage, $currentPage, $this->basePath.'/order', [
+            ->paginate($totalItems, $perPage, $currentPage, $this->basePath . '/order', [
                 'sort' => $sort,
                 'direction' => $direction,
                 'search' => $search,
@@ -117,14 +119,13 @@ class OrderController
             'title' => 'Liste des commandes'
         ]);
 
-        $_SESSION['flash']="";
     }
 
     public function create()
     {
         $customers = Customer::all();
         $materials = Material::all();
-        
+
         $this->render('app', 'orders/create', [
             'title' => 'Créer une commande',
             'customers' => $customers,
@@ -134,262 +135,253 @@ class OrderController
     }
 
 
-public function store()
-{
-    $data = [
-        'customer_id' => $_POST['customer_id'],
-        'reference' => 'ORD-' . date('Ymd-His'),
-        'delivery_date' => $_POST['delivery_date'],
-        'priority' => $_POST['priority'],
-        'notes' => $_POST['notes'] ?? null
-    ];
-
-    if (empty($data['customer_id'])) {
-        http_response_code(400);
-        echo "Le client est obligatoire";
-        return;
-    }
-
-    DB::beginTransaction();
-
-    try {
-        $order = Order::create($data);
-
-        $steps = ['prepress', 'printing', 'finishing', 'quality_check', 'packaging'];
-        foreach ($steps as $step) {
-            ProductionStep::create([
-                'order_id' => $order->id,
-                'step' => $step,
-                'status' => 'pending'
-            ]);
-        }
-
-        if (!empty($_POST['materials'])) {
-            foreach ($_POST['materials'] as $materialId => $quantity) {
-                if ($quantity > 0) {
-                    $material = Material::find($materialId);
-                    
-                    if (!$material) {
-                        throw new \Exception("Matériau non trouvé");
-                    }
-
-                    if ($material->stock_quantity < $quantity) {
-                        throw new \Exception("Stock insuffisant pour {$material->name}");
-                    }
-
-                    $material->decrement('stock_quantity', $quantity);
-                    $order->materials()->attach($materialId, ['quantity_used' => $quantity]);
-                }
-            }
-        }
-
-        DB::commit();
-
-        $_SESSION['flash'] = [
-            'type' => 'success',
-            'message' => 'Commande créée avec succès'
-        ];
-    } catch (\Exception $e) {
-        DB::rollBack();
-
-        $_SESSION['flash'] = [
-            'type' => 'danger',
-            'message' => 'Erreur : ' . $e->getMessage()
-        ];
-    }
-
-    header('Location: ' . $this->basePath . '/order');
-    exit;
-}
-   public function show($id)
-{
-    // Gestion des paramètres d'URL
-    if (is_array($id)) {
-        $id = $id['id'] ?? null;
-    }
-
-    if (!$id) {
-        http_response_code(400);
-        echo "ID de commande non fourni";
-        return;
-    }
-
-    // Chargement des données avec requête optimisée
-    $order = Order::with([
-        'customer',
-        'files',
-        'productionSteps' => function($query) {
-            $query->orderBy('created_at', 'asc');
-        },
-        'materials' => function($query) {
-            $query->select('materials.*', 'order_materials.quantity_used as pivot_quantity_used');
-        }
-    ])->findOrFail($id);
-
-    $this->render('app', 'orders/show', [
-        'order' => $order,
-        'title' => 'Détails de la commande',
-        'basePath' => $this->basePath
-    ]);
-}
-
-
-   public function edit($id)
-{
-     if (is_array($id)) {
-            $id = $id['id'] ?? null; // Extract ID from array if accidentally passed
-        }
-
-        if (!$id) {
-            http_response_code(400);
-            echo "ID de commande non fourni";
-            return;
-        }
-        
-    // Récupérer la commande avec le client
-    $order = Order::with('customer')->findOrFail($id);
-    
-    // Récupérer les matériaux associés proprement
-    $materialsList = DB::table('materials')
-        ->join('order_materials', 'materials.id', '=', 'order_materials.material_id')
-        ->where('order_materials.order_id', $id)
-        ->select('materials.*', 'order_materials.quantity_used')
-        ->get();
-
-    $customers = Customer::all();
-    $allMaterials = Material::all();
-
-    $this->render('app', 'orders/edit', [
-        'order' => $order, // L'objet Order unique
-        'materialsList' => $materialsList, // Collection des matériaux associés
-        'customers' => $customers,
-        'materials' => $allMaterials,
-        'priorities' => ['low', 'medium', 'high', 'urgent'],
-        'statuses' => ['received', 'in_preparation', 'in_printing', 'in_finishing', 'ready_for_delivery', 'delivered', 'canceled'],
-        'title' => 'Modifier la commande'
-    ]);
-}
-
-public function update($id)
-{
-    if (is_array($id)) {
-            $id = $id['id'] ?? null; // Extract ID from array if accidentally passed
-        }
-
-        if (!$id) {
-            http_response_code(400);
-            echo "ID de commande non fourni";
-            return;
-        }
-    $order = Order::find($id);
-
-    if (!$order) {
-        http_response_code(404);
-        echo "Commande non trouvée";
-        return;
-    }
-
-    DB::beginTransaction();
-
-    try {
-        foreach ($order->materials as $material) {
-            $material->increment('stock_quantity', $material->pivot->quantity_used);
-        }
-        $order->update([
+    public function store()
+    {
+        $data = [
             'customer_id' => $_POST['customer_id'],
+            'reference' => 'ORD-' . date('Ymd-His'),
             'delivery_date' => $_POST['delivery_date'],
             'priority' => $_POST['priority'],
-            'status' => $_POST['status'],
             'notes' => $_POST['notes'] ?? null
-        ]);
+        ];
 
-        $order->materials()->detach();
-        if (!empty($_POST['materials'])) {
-            foreach ($_POST['materials'] as $materialId => $quantity) {
-                if ($quantity > 0) {
-                    $material = Material::find($materialId);
-                    
-                    if (!$material) {
-                        throw new \Exception("Matériau non trouvé");
-                    }
-
-                    if ($material->stock_quantity < $quantity) {
-                        throw new \Exception("Stock insuffisant pour {$material->name}");
-                    }
-
-                    $material->decrement('stock_quantity', $quantity);
-                    $order->materials()->attach($materialId, ['quantity_used' => $quantity]);
-                }
-            }
+        if (empty($data['customer_id'])) {
+            http_response_code(400);
+            echo "Le client est obligatoire";
+            return;
         }
 
-        DB::commit();
+        DB::beginTransaction();
 
-        $_SESSION['flash'] = [
-            'type' => 'success',
-            'message' => 'Commande mise à jour avec succès'
-        ];
-    } catch (\Exception $e) {
-        DB::rollBack();
-        $_SESSION['flash'] = [
-            'type' => 'danger',
-            'message' => 'Erreur : ' . $e->getMessage()
-        ];
+        try {
+            $order = Order::create($data);
+
+            $steps = ['prepress', 'printing', 'finishing', 'quality_check', 'packaging'];
+            foreach ($steps as $step) {
+                ProductionStep::create([
+                    'order_id' => $order->id,
+                    'step' => $step,
+                    'status' => 'pending'
+                ]);
+            }
+
+            if (!empty($_POST['materials'])) {
+                foreach ($_POST['materials'] as $materialId => $quantity) {
+                    if ($quantity > 0) {
+                        $material = Material::find($materialId);
+
+                        if (!$material) {
+                            throw new \Exception("Matériau non trouvé");
+                        }
+
+                        if ($material->stock_quantity < $quantity) {
+                            throw new \Exception("Stock insuffisant pour {$material->name}");
+                        }
+
+                        $material->decrement('stock_quantity', $quantity);
+                        $order->materials()->attach($materialId, ['quantity_used' => $quantity]);
+                    }
+                }
+            }
+
+            DB::commit();
+
+
+            Flash('message', 'Commande créée avec succès', 'success');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+
+            Flash('message', 'Erreur : ' . $e->getMessage());
+
+        }
+
+        header('Location: ' . $this->basePath . '/order');
+        exit;
+    }
+    public function show($id)
+    {
+
+        if (is_array($id)) {
+            $id = $id['id'] ?? null;
+        }
+
+        if (!$id) {
+            http_response_code(400);
+            echo "ID de commande non fourni";
+            return;
+        }
+
+        $order = Order::with([
+            'customer',
+            'files',
+            'productionSteps' => function ($query) {
+                $query->orderBy('created_at', 'asc');
+            },
+            'materials' => function ($query) {
+                $query->select('materials.*', 'order_materials.quantity_used as pivot_quantity_used');
+            }
+        ])->findOrFail($id);
+
+        $this->render('app', 'orders/show', [
+            'order' => $order,
+            'title' => 'Détails de la commande',
+            'basePath' => $this->basePath
+        ]);
     }
 
-    header('Location: ' . $this->basePath . '/order');
-    exit;
-}
 
-public function delete($id)
-{
-    if (is_array($id)) {
-        $id = $id['id'] ?? null;
+    public function edit($id)
+    {
+        if (is_array($id)) {
+            $id = $id['id'] ?? null;
+        }
+
+        if (!$id) {
+            http_response_code(400);
+            echo "ID de commande non fourni";
+            return;
+        }
+
+        $order = Order::with('customer')->findOrFail($id);
+
+        $materialsList = DB::table('materials')
+            ->join('order_materials', 'materials.id', '=', 'order_materials.material_id')
+            ->where('order_materials.order_id', $id)
+            ->select('materials.*', 'order_materials.quantity_used')
+            ->get();
+
+        $customers = Customer::all();
+        $allMaterials = Material::all();
+
+        $this->render('app', 'orders/edit', [
+            'order' => $order,
+            'materialsList' => $materialsList,
+            'customers' => $customers,
+            'materials' => $allMaterials,
+            'priorities' => ['low', 'medium', 'high', 'urgent'],
+            'statuses' => ['received', 'in_preparation', 'in_printing', 'in_finishing', 'ready_for_delivery', 'delivered', 'canceled'],
+            'title' => 'Modifier la commande'
+        ]);
     }
 
-    if (!$id) {
-        http_response_code(400);
-        echo "ID de commande non fourni";
-        return;
-    }
+    public function update($id)
+    {
+        if (is_array($id)) {
+            $id = $id['id'] ?? null;
+        }
 
-    DB::beginTransaction();
-
-    try {
+        if (!$id) {
+            http_response_code(400);
+            echo "ID de commande non fourni";
+            return;
+        }
         $order = Order::find($id);
 
         if (!$order) {
-            throw new \Exception("Commande non trouvée");
+            http_response_code(404);
+            echo "Commande non trouvée";
+            return;
         }
 
-        foreach ($order->materials as $material) {
-            $material->increment('stock_quantity', $material->pivot->quantity_used);
+        DB::beginTransaction();
+
+        try {
+            foreach ($order->materials as $material) {
+                $material->increment('stock_quantity', $material->pivot->quantity_used);
+            }
+            $order->update([
+                'customer_id' => $_POST['customer_id'],
+                'delivery_date' => $_POST['delivery_date'],
+                'priority' => $_POST['priority'],
+                'status' => $_POST['status'],
+                'notes' => $_POST['notes'] ?? null
+            ]);
+
+            $order->materials()->detach();
+            if (!empty($_POST['materials'])) {
+                foreach ($_POST['materials'] as $materialId => $quantity) {
+                    if ($quantity > 0) {
+                        $material = Material::find($materialId);
+
+                        if (!$material) {
+                            throw new \Exception("Matériau non trouvé");
+                        }
+
+                        if ($material->stock_quantity < $quantity) {
+                            throw new \Exception("Stock insuffisant pour {$material->name}");
+                        }
+
+                        $material->decrement('stock_quantity', $quantity);
+                        $order->materials()->attach($materialId, ['quantity_used' => $quantity]);
+                    }
+                }
+            }
+
+            DB::commit();
+
+
+            Flash('message', 'Commande mise à jour  avec succès', 'success');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            Flash('message', 'Erreur : ' . $e->getMessage());
+
         }
 
-        $order->delete();
-
-        DB::commit();
-
-        $_SESSION['flash'] = [
-            'type' => 'success',
-            'message' => 'Commande supprimée avec succès'
-        ];
-    } catch (\Exception $e) {
-        DB::rollBack();
-        $_SESSION['flash'] = [
-            'type' => 'danger',
-            'message' => 'Erreur : ' . $e->getMessage()
-        ];
+        header('Location: ' . $this->basePath . '/order');
+        exit;
     }
 
-    header('Location: ' . $this->basePath . '/order');
-    exit;
-}
+    public function delete($id)
+    {
+        if (is_array($id)) {
+            $id = $id['id'] ?? null;
+        }
+
+        if (!$id) {
+            http_response_code(400);
+            echo "ID de commande non fourni";
+            return;
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $order = Order::find($id);
+
+            if (!$order) {
+                throw new \Exception("Commande non trouvée");
+            }
+
+            foreach ($order->materials as $material) {
+                $material->increment('stock_quantity', $material->pivot->quantity_used);
+            }
+
+            $order->delete();
+
+            DB::commit();
+
+
+            Flash('message', 'Commande supprimée avec succès', 'success');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            Flash('message', 'Erreur : ' . $e->getMessage());
+
+        }
+
+        header('Location: ' . $this->basePath . '/order');
+        exit;
+    }
     public function updateStepStatus($orderId, $stepId)
     {
         $step = ProductionStep::where('id', $stepId)
-                             ->where('order_id', $orderId)
-                             ->first();
+            ->where('order_id', $orderId)
+            ->first();
 
         if (!$step) {
             http_response_code(404);
@@ -402,15 +394,16 @@ public function delete($id)
 
         if ($status === 'in_progress') {
             $updateData['start_time'] = date('Y-m-d H:i:s');
-    } elseif ($status === 'completed') {;
+        } elseif ($status === 'completed') {
+            ;
         } elseif ($status === 'completed') {
             $updateData['end_time'] = date('Y-m-d H:i:s');
-    } elseif ($status === 'completed') {;
+        } elseif ($status === 'completed') {
+            ;
         }
 
         $step->update($updateData);
 
-        // Update order status based on steps
         $this->updateOrderStatus($orderId);
 
         echo json_encode(['success' => true]);
@@ -419,9 +412,9 @@ public function delete($id)
     protected function updateOrderStatus($orderId)
     {
         $order = Order::with('productionSteps')->find($orderId);
-        
+
         if ($order->status === 'canceled') {
-            return; // Don't update if order is canceled
+            return;
         }
 
         $steps = $order->productionSteps;
@@ -442,10 +435,9 @@ public function delete($id)
         } elseif ($allCompleted) {
             $order->update(['status' => 'ready_for_delivery']);
         } else {
-            // Determine the most advanced in-progress step
             $stepOrder = ['prepress', 'printing', 'finishing', 'quality_check', 'packaging'];
             $currentStepIndex = 0;
-            
+
             foreach ($steps as $step) {
                 if ($step->status === 'in_progress' || $step->status === 'completed') {
                     $index = array_search($step->step, $stepOrder);
@@ -454,7 +446,7 @@ public function delete($id)
                     }
                 }
             }
-            
+
             $statusMap = [
                 0 => 'in_preparation',
                 1 => 'in_printing',
@@ -462,37 +454,38 @@ public function delete($id)
                 3 => 'quality_check',
                 4 => 'ready_for_delivery'
             ];
-            
+
             $order->update(['status' => $statusMap[$currentStepIndex]]);
         }
     }
 
-public function productionTracking($orderId)
-{
-    // Handle case where $orderId is an array
-    if (is_array($orderId)) {
-        $orderId = $orderId['id'] ?? null;
+    public function productionTracking($orderId)
+    {
+        if (is_array($orderId)) {
+            $orderId = $orderId['id'] ?? null;
+        }
+
+        if (!$orderId) {
+            http_response_code(400);
+            echo "ID de commande non fourni";
+            return;
+        }
+
+        $order = Order::with([
+            'productionSteps' => function ($query) {
+                $query->orderBy('created_at', 'asc');
+            }
+        ])->find($orderId);
+
+        if (!$order) {
+            http_response_code(404);
+            echo "Commande non trouvée";
+            return;
+        }
+
+        $this->render('app', 'orders/production_tracking', [
+            'order' => $order,
+            'title' => 'Suivi de production'
+        ]);
     }
-
-    if (!$orderId) {
-        http_response_code(400);
-        echo "ID de commande non fourni";
-        return;
-    }
-
-    $order = Order::with(['productionSteps' => function($query) {
-        $query->orderBy('created_at', 'asc');
-    }])->find($orderId);
-
-    if (!$order) {
-        http_response_code(404);
-        echo "Commande non trouvée";
-        return;
-    }
-
-    $this->render('app', 'orders/production_tracking', [
-        'order' => $order,
-        'title' => 'Suivi de production'
-    ]);
-}
 }

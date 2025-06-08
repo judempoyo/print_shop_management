@@ -69,7 +69,7 @@ class ProductionStepController
         $order = Order::with('productionSteps')->find($orderId);
 
         if ($order->status === 'canceled') {
-            return; // Ne pas modifier si annulée
+            return; 
         }
 
         $steps = $order->productionSteps;
@@ -90,7 +90,6 @@ class ProductionStepController
         } elseif ($allCompleted) {
             $newStatus = 'ready_for_delivery';
         } else {
-            // Déterminer l'étape la plus avancée
             $stepStatuses = [
                 'prepress' => 'in_preparation',
                 'printing' => 'in_printing',
@@ -113,7 +112,7 @@ class ProductionStepController
     public function create($orderId)
     {
         if (is_array($orderId)) {
-            $orderId = $orderId['order_id'] ?? null; // Extract ID from array if accidentally passed
+            $orderId = $orderId['order_id'] ?? null; 
         }
 
         if (!$orderId) {
@@ -153,16 +152,13 @@ class ProductionStepController
 
         ProductionStep::create($data);
 
-        $_SESSION['flash'] = [
-            'type' => 'success',
-            'message' => 'Étape ajoutée avec succès'
-        ];
+        Flash('message', 'Étape ajoutée avec succès', 'success');
+
         header("Location: {$this->basePath}/order/show/{$orderId}");
     }
 
     public function edit(array $params)
     {
-        // Extraire les IDs du tableau de paramètres
         $orderId = $params['order_id'] ?? null;
         $stepId = $params['id'] ?? null;
 
@@ -200,42 +196,32 @@ class ProductionStepController
     public function updateStatus(array $params)
     {
         try {
-            // Validation des paramètres
             [$orderId, $stepId] = $this->validateIds($params);
 
-            // Récupération et vérification de l'étape
+       
             $step = $this->getProductionStep($orderId, $stepId);
 
-            // Validation des données du formulaire
             $validatedData = $this->validateStepData($_POST);
 
-            // Préparation des données de mise à jour
             $updateData = $this->prepareUpdateData($step, $validatedData);
 
-            // Mise à jour de l'étape
             $step->update($updateData);
 
-            // Mise à jour du statut global de la commande
+         
             $this->updateOrderStatus($orderId);
 
-
-            $_SESSION['flash'] = [
-                'type' => 'success',
-                'message' => 'Étape mise à jour avec succès'
-            ];
+        Flash('message', 'Étape modifié avec succès', 'success');
 
         } catch (\InvalidArgumentException $e) {
             http_response_code(400);
-            $_SESSION['flash'] = [
-                'type' => 'error',
-                'message' => $e->getMessage()
-            ];
+        
+        Flash('message',$e->getMessage() );
+
         } catch (\Exception $e) {
             http_response_code(500);
-            $_SESSION['flash'] = [
-                'type' => 'error',
-                'message' => 'Une erreur est survenue lors de la mise à jour'
-            ];
+      
+        Flash('message', 'Une erreur est survenue lors de la mise à jour');
+
         }
 
         header("Location: {$this->basePath}/order/show/{$orderId}");
@@ -292,7 +278,7 @@ class ProductionStepController
             'comments' => $validatedData['comments']
         ];
 
-        // Gestion des dates automatiques
+
         switch ($validatedData['status']) {
             case 'in_progress':
                 if (!$step->start_time) {
@@ -309,7 +295,7 @@ class ProductionStepController
                 break;
         }
 
-        // Gestion des dates manuelles
+  
         if ($validatedData['start_time']) {
             $updateData['start_time'] = $validatedData['start_time'];
         }
@@ -324,39 +310,32 @@ class ProductionStepController
     public function delete(array $params)
     {
         try {
-            // Validation des paramètres
+         
             [$orderId, $stepId] = $this->validateIds($params);
 
-            // Récupération et vérification de l'étape
+  
             $step = $this->getProductionStep($orderId, $stepId);
 
-            // Vérification des préconditions
             $this->validateDeletionConditions($step);
 
-            // Suppression
             $step->delete();
 
-            // Mise à jour du statut global
+
             $this->updateOrderStatus($orderId);
 
+        Flash('message', 'Étape supprimée avec succèss', 'success');
 
-            $_SESSION['flash'] = [
-                'type' => 'success',
-                'message' => 'Étape supprimée avec succès'
-            ];
 
         } catch (\InvalidArgumentException $e) {
             http_response_code(400);
-            $_SESSION['flash'] = [
-                'type' => 'error',
-                'message' => $e->getMessage()
-            ];
+        
+        Flash('message',$e->getMessage());
+
         } catch (\Exception $e) {
             http_response_code(500);
-            $_SESSION['flash'] = [
-                'type' => 'error',
-                'message' => 'Une erreur est survenue lors de la suppression'
-            ];
+           
+        Flash('message', 'Une erreur est survenue lors de la suppressio');
+            
         }
 
         header("Location: {$this->basePath}/order/show/{$orderId}");

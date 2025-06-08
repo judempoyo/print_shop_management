@@ -120,7 +120,7 @@ class MaterialController
             'cost_per_unit' => !empty($_POST['cost_per_unit']) ? (float)$_POST['cost_per_unit'] : null
         ];
 
-        // Validation
+      
         $errors = [];
         if (empty($data['name'])) {
             $errors[] = "Le nom est obligatoire";
@@ -143,17 +143,16 @@ class MaterialController
 
         Material::create($data);
 
-        $_SESSION['flash'] = [
-            'type' => 'success',
-            'message' => 'Matériau créé avec succès'
-        ];
+
+        Flash('message', 'Matériau créé  avec succès', 'success');
+
         header('Location: ' . $this->basePath . '/material');
     }
 
     public function edit($id)
     {
         if (is_array($id)) {
-            $id = $id['id'] ?? null; // Extract ID from array if accidentally passed
+            $id = $id['id'] ?? null; 
         }
 
         if (!$id) {
@@ -202,7 +201,7 @@ class MaterialController
             'cost_per_unit' => !empty($_POST['cost_per_unit']) ? (float)$_POST['cost_per_unit'] : null
         ];
 
-        // Validation
+      
         $errors = [];
         if (empty($data['name'])) {
             $errors[] = "Le nom est obligatoire";
@@ -225,10 +224,8 @@ class MaterialController
 
         $material->update($data);
 
-        $_SESSION['flash'] = [
-            'type' => 'success',
-            'message' => 'Matériau mis à jour avec succès'
-        ];
+        Flash('message', 'Matériau modifié  avec succès', 'success');
+
         header('Location: ' . $this->basePath . '/material');
     }
 
@@ -241,21 +238,18 @@ class MaterialController
             return;
         }
 
-        // Vérifier si le matériau est utilisé dans des commandes
         if ($material->orders()->count() > 0) {
-            $_SESSION['flash'] = [
-                'type' => 'error',
-                'message' => 'Impossible de supprimer: ce matériau est utilisé dans des commandes'
-            ];
+    
+            Flash('message', 'Impossible de supprimer: ce matériau est utilisé dans des commandes');
+
             header('Location: ' . $this->basePath . '/material');
             return;
         }
 
         $material->delete();
-        $_SESSION['flash'] = [
-            'type' => 'success',
-            'message' => 'Matériau supprimé avec succès'
-        ];
+
+        Flash('message', 'Matériau supprimé  avec succès', 'success');
+
         header('Location: ' . $this->basePath . '/material');
     }
 }

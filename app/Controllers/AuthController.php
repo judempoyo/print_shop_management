@@ -259,7 +259,7 @@ class AuthController
         return time() > $expirationTime;
     }
 
-    // Validation de l'inscription
+   de l'inscription
     private function validateRegistration($data)
     {
         $errors = [];

@@ -210,7 +210,7 @@ class CustomerController
 
         if ($customer->orders()->count() > 0) {
        
-        Flash('message', 'Impossible de supprimer: ce client a des commandes associées', 'success');
+        Flash('message', 'Impossible de supprimer: ce client a des commandes associées');
 
             header('Location: ' . $this->basePath . '/customer');
             return;

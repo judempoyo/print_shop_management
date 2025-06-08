@@ -1,1 +1,2 @@
+<?php flash('message') ?>
 <?= $datatable ?>

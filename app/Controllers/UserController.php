@@ -338,7 +338,7 @@ public function deleteProfile()
     {
         $this->checkAdminAccess();
          if (is_array($userId)) {
-            $userId = $userId['id'] ?? null; // Extract ID from array if accidentally passed
+            $userId = $userId['id'] ?? null; 
         }
 
         if (!$userId) {
